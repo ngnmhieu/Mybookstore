@@ -1,0 +1,12 @@
+<VirtualHost *:80>
+    ServerAdmin email
+    ServerName markzero.com
+    DocumentRoot "PUBLIC_DIR"
+    ErrorLog "DIR"
+    CustomLog "DIR" common
+
+    <Directory "PUBLIC_DIR">
+      Options Indexes FollowSymLinks
+      AllowOverride All
+    </Directory>
+</VirtualHost>

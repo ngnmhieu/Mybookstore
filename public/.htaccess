@@ -1,0 +1,20 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+
+  # Forbid user to directly access php scripts
+  # RewriteCond %{THE_REQUEST} .*\.php
+  # RewriteRule ^.*\.php$ 404.html
+
+  # RewriteCond %{REQUEST_FILENAME} !-f
+  # RewriteCond %{REQUEST_FILENAME} !-d
+  # RewriteRule .* 404.html [L]
+
+  # Rewrite directory
+  # RewriteCond %{REQUEST_FILENAME} !-d
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_URI} !index\.php
+  RewriteRule ^(.*)$ index.php/$1 [NC]
+
+
+</IfModule>
