@@ -19,7 +19,9 @@ class Book extends AppModel {
   protected function _validate() {
     $vm = self::createValidationManager();
 
-    // $vm->validate();
+    $vm->validate('name', new FunctionValidator(function($name) {
+      return !empty($name);
+    }, array($this->name)));
 
     $vm->do_validate();
   }

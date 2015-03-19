@@ -7,7 +7,15 @@
 
 App::$router->draw(function($r) {
   $r->root('book#index');
-  $r->map('get','/book/([0-9]+)','book#show');
-  $r->map('post','/book/','book#create');
+
+  $r->get('/book/','book#index');
+  $r->get('/book/([0-9]+)','book#show');
+  $r->post('/book/','book#create');
+  $r->post('/book/([0-9]+)','book#update');
+  $r->delete('/book/delete','book#destroy');
+
+  $r->get('/book/delete','book#destroy');
+  $r->get('/book/add','book#add');
+  $r->get('/book/([0-9]+)/edit','book#edit');
 });
 
