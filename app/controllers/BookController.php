@@ -6,7 +6,7 @@ class BookController extends AppController {
 
     $this->respond_to('html', function() use ($books) {
       $data['books'] = $books;
-      $this->render(new HtmlView($data, 'book/index', App::$VIEW_PATH));
+      $this->render(new HtmlView($data, 'book/index'));
     });
 
     $this->respond_to('json', function() use ($books) {
@@ -22,13 +22,14 @@ class BookController extends AppController {
       $book = Book::create($this->request()->request);
 
       $this->respond_to('html', function() {
-        $this->response()->redirect(array("controller" => 'book', 'action' => 'index'));
+        $this->response()->redirect('book', 'index');
       });
     } catch(ValidationException $e) {
+
       $this->respond_to('html', function() {
-        $this->response()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-        $this->response()->redirect(array("controller" => 'book', 'action' => 'add'));
+        $this->response()->redirect('book', 'add');
       });
+
     }
   }
 
@@ -36,17 +37,54 @@ class BookController extends AppController {
   }
 
   public function add() {
+
     $this->respond_to('html', function() {
       $this->render(new HtmlView(array(), 'book/add'));
     });
+
   }
 
   public function edit($id) {
-    $this->respond_to('html', function() {
-    });
+    try {
+      $book = Book::find($id);
+
+      $this->respond_to('html', function() use($book) {
+        $data['book'] = $book;
+        $this->render(new HtmlView($data, 'book/edit'));
+      });
+
+    } catch(ResourceNotFoundException $e) {
+
+      $this->respond_to('html', function() use($id) {
+        $this->response()->redirect('book', 'index');
+      });
+
+    }
+    
   }
 
   public function update($id) {
+    try {
+
+      $book = Book::find($id);
+
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+    } catch(ResourceNotFoundException $e) {
+
+      $this->respond_to('html', function() use($id) {
+        $this->response()->redirect('book', 'edit', array($id));
+      });
+
+    } catch(ValidationException $e) {
+
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'add');
+      });
+
+    }
   }
 
   public function destroy() {
