@@ -13,7 +13,7 @@ class Book extends AppModel {
   /** @Column(type="string") **/
   protected $name;
 
-  public function _default() {
+  protected function _default() {
   }
 
   protected function _validate() {
@@ -25,7 +25,6 @@ class Book extends AppModel {
 
     $vm->do_validate();
   }
-
 
   /**
    * @throw ValidationException
@@ -62,6 +61,27 @@ class Book extends AppModel {
     return $obj;
   }
 
-  static function destroy() {
+  /**
+   * @throw ResourceNotFoundException
+   *        Exception
+   */
+  static function delete($id) {
+    $book = Book::find($id);
+    if ($book === null) {
+      throw new ResourceNotFoundException();
+    }
+
+    $conn = App::$em->getConnection();
+    $conn->beginTransaction();
+
+    try {
+      App::$em->remove($book); 
+      App::$em->flush();
+
+      $conn->commit();
+    } catch(Exception $e) {
+      $conn->rollback();
+      throw $e;
+    }
   }
 }

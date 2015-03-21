@@ -1,4 +1,4 @@
-<?php $this->partial('book/header') ?>
+<?php $this->partial('common/header') ?>
 
 <h1>Edit Book #<?=$book->id?></h1>
   <form action="<?=webpath('book#update', array($book->id))?>" method="post">
@@ -9,4 +9,4 @@
 
 <a href="<?=webpath('book#index')?>">Return to book list.</a>
 
-<?php $this->partial('book/footer') ?>
+<?php $this->partial('common/footer') ?>

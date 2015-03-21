@@ -34,6 +34,21 @@ class BookController extends AppController {
   }
 
   public function show($id) {
+    try {
+      $book = Book::find($id);
+
+      $this->respond_to('html', function() {
+        $this->render(new HtmlView(array(), 'book/show'));
+      });
+
+    } catch(ResourceNotFoundException $e) {
+
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book','index');
+      });
+
+    }
+
   }
 
   public function add() {
@@ -87,7 +102,32 @@ class BookController extends AppController {
     }
   }
 
-  public function destroy() {
+  function delete($id) {
+    try {
+      Book::delete($id);
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+      $this->respond_to('json', function() {
+        $this->response()->setStatusCode(Response::HTTP_OK, 'Transaction deleted');
+      });
+
+    } catch(ResourceNotFoundException $e) {
+      
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+    } catch(Exception $e) {
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+      $this->respond_to('json', function() use($e) {
+        $this->response()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, '[Error] Transaction could not be deleted: '.$e->getMessage());
+      });
+    }
   }
 
 }
