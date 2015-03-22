@@ -24,5 +24,10 @@ App::$router->draw(function($r) {
   /** User **/
   $r->get('/user/register','user#register');
   $r->post('/user/','user#create');
+
+  /** Session **/
+  $r->get('/session/sign_in','session#signIn');
+  $r->get('/session/sign_out','session#delete');
+  $r->post('/session/','session#create');
 });
 

@@ -6,7 +6,7 @@
  */
 class User extends AppModel {
   protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('email', 'name');
+  protected static $attr_accessor = array('email', 'name', 'password_hash');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;

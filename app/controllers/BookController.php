@@ -81,7 +81,7 @@ class BookController extends AppController {
   public function update($id) {
     try {
 
-      $book = Book::find($id);
+      $book = Book::update($id, $this->request()->request);
 
       $this->respond_to('html', function() {
         $this->response()->redirect('book', 'index');

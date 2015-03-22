@@ -45,10 +45,10 @@ class Book extends AppModel {
    * @throw ResourceNotFoundException
    *        ValidationException
    */
-  static function update($params) {
+  static function update($id, $params) {
     $em = self::getEntityMananger();
 
-    $obj = static::find($params->get('id'));
+    $obj = static::find($id);
     if ($obj === null) {
       throw new ResourceNotFoundException();
     }
