@@ -1,4 +1,6 @@
 <?php
+use Markzero\Mvc\AppModel;
+use Markzero\Validation\Validator;
 
 /**
  * @Entity
@@ -32,17 +34,17 @@ class User extends AppModel {
   protected function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->validate('name', new FunctionValidator(function($name) {
+    $vm->validate('name', new Validator\FunctionValidator(function($name) {
       return !empty($name);
     }, array($this->name)), "Name is required");
 
-    $vm->validate('email', new FunctionValidator(function($email) {
+    $vm->validate('email', new Validator\FunctionValidator(function($email) {
       return !empty($email);
     }, array($this->email)), "Email address is required");
 
-    $vm->validate('email', new EmailValidator($this->email), "Invalid Email address");
+    $vm->validate('email', new Validator\EmailValidator($this->email), "Invalid Email address");
 
-    $vm->validate('email', new FunctionValidator(function($email) {
+    $vm->validate('email', new Validator\FunctionValidator(function($email) {
       $existed_user = self::findOneBy(array('email' => $email));
       return $existed_user === null;
     }, array($this->email)), "Email address already existed");
@@ -63,7 +65,7 @@ class User extends AppModel {
     // extra validate
     $vm = self::createValidationManager();
 
-    $vm->validate('password', new FunctionValidator(function($password) {
+    $vm->validate('password', new Validator\FunctionValidator(function($password) {
       return !empty($password);
     }, array($params->get('password'))), "Password is required");
 

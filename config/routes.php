@@ -1,4 +1,6 @@
 <?php
+use Markzero\App;
+
 /*
  * Version 0 
  * all the mapping must be regular expression

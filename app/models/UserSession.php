@@ -1,4 +1,7 @@
 <?php
+use Markzero\Mvc\AppModel;
+use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Auth\Exception\AuthenticationFailedException;
 
 class UserSession extends AppModel {
 
@@ -11,8 +14,8 @@ class UserSession extends AppModel {
   }
 
   /**
-   * @throw ResourceNotFoundException
-   *        AuthenticationFailedException
+   *  @throw Markzero\Http\Exception\ResourceNotFoundException
+   *  @throw Markzero\Auth\Exception\AuthenticationFailedException
    */
   static function create($params) {
 
@@ -20,8 +23,8 @@ class UserSession extends AppModel {
     $password = $params->get('user[password]', null, true);
 
     $vm = self::createValidationManager();
-    $vm->validate('user.email', new EmailValidator($email));
-    $vm->validate('user.password', new RequireValidator($password), 'Password is required');
+    $vm->validate('user.email', new Validator\EmailValidator($email));
+    $vm->validate('user.password', new Validator\RequireValidator($password), 'Password is required');
     $vm->do_validate();
 
     $user = User::findOneBy(array('email' => $email));

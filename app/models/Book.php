@@ -1,4 +1,8 @@
 <?php
+use Markzero\Mvc\AppModel;
+use Markzero\Validation\Validator;
+use Markzero\Validation\Exception\ValidationException;
+use Markzero\Http\Exception\ResourceNotFoundException;
 
 /**
  * @Entity 
@@ -29,7 +33,7 @@ class Book extends AppModel {
   protected function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->validate('name', new FunctionValidator(function($name) {
+    $vm->validate('name', new Validator\FunctionValidator(function($name) {
       return !empty($name);
     }, array($this->name)));
 
@@ -37,7 +41,7 @@ class Book extends AppModel {
   }
 
   /**
-   * @throw ValidationException
+   * @throw Markzero\Validation\Exception\ValidationException
    */
   static function create($params) {
     $em = self::getEntityMananger();
@@ -53,8 +57,8 @@ class Book extends AppModel {
   }
 
   /**
-   * @throw ResourceNotFoundException
-   *        ValidationException
+   * @throw Markzero\Http\Exception\ResourceNotFoundException
+   *        Markzero\Validation\Exception\ValidationException
    */
   static function update($id, $params) {
     $em = self::getEntityMananger();
@@ -74,7 +78,7 @@ class Book extends AppModel {
   }
 
   /**
-   * @throw ResourceNotFoundException
+   * @throw Markzero\Http\Exception\ResourceNotFoundException
    *        Exception
    */
   static function delete($id) {

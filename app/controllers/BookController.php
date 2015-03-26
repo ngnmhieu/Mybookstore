@@ -1,4 +1,11 @@
 <?php
+use Markzero\Mvc\View;
+use Markzero\Mvc\AppController;
+use Markzero\Auth\Exception\AuthenticationFailedException;
+use Markzero\Auth\Exception\ActionNotAuthorizedException;
+use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Validation\Exception\ValidationException;
+
 class BookController extends AppController {
 
   public function index() {
@@ -19,14 +26,14 @@ class BookController extends AppController {
       $data['rating_values'] = Rating::$VALID_VALUES;
       $data['user_ratings'] = $user_ratings;
 
-      $this->render(new HtmlView($data, 'book/index'));
+      $this->render(new View\HtmlView($data, 'book/index'));
     });
 
     $this->respond_to('json', function() use ($books) {
       $data = array_map(function($book) {
         return $book->to_array();
       }, $books);
-      $this->render(new JsonView($data));
+      $this->render(new View\JsonView($data));
     });
   }
 
@@ -64,7 +71,7 @@ class BookController extends AppController {
         foreach ($ratings as $rating) {
           $data['ratings'][(int) $rating->value][] = $rating;
         }
-        $this->render(new HtmlView($data, 'book/show'));
+        $this->render(new View\HtmlView($data, 'book/show'));
       });
 
     } catch(ResourceNotFoundException $e) {
@@ -80,7 +87,7 @@ class BookController extends AppController {
   public function add() {
 
     $this->respond_to('html', function() {
-      $this->render(new HtmlView(array(), 'book/add'));
+      $this->render(new View\HtmlView(array(), 'book/add'));
     });
 
   }
@@ -91,7 +98,7 @@ class BookController extends AppController {
 
       $this->respond_to('html', function() use($book) {
         $data['book'] = $book;
-        $this->render(new HtmlView($data, 'book/edit'));
+        $this->render(new View\HtmlView($data, 'book/edit'));
       });
 
     } catch(ResourceNotFoundException $e) {
@@ -121,8 +128,8 @@ class BookController extends AppController {
 
     } catch(ValidationException $e) {
 
-      $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'add');
+      $this->respond_to('html', function() use($id) {
+        $this->response()->redirect('book', 'edit', array($id));
       });
 
     }
@@ -145,7 +152,7 @@ class BookController extends AppController {
         $this->response()->redirect('book', 'index');
       });
 
-    } catch(Exception $e) {
+    } catch(\Exception $e) {
       $this->respond_to('html', function() {
         $this->response()->redirect('book', 'index');
       });

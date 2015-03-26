@@ -1,4 +1,8 @@
 <?php
+use Markzero\Mvc\AppModel;
+use Markzero\Validation\Validator;
+use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Http\Exception\DuplicateResourceException;
 
 /**
  * @Entity
@@ -29,14 +33,19 @@ class Rating extends AppModel {
   function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->validate('value', new RequireValidator($this->value), 'Value of the rating is required');
-    $vm->validate('value', new FunctionValidator(function() {
+    $vm->validate('value', new Validator\RequireValidator($this->value), 'Value of the rating is required');
+    $vm->validate('value', new Validator\FunctionValidator(function() {
       return in_array((int) $this->value, Rating::$VALID_VALUES);
     }), 'Rating value is invalid');
 
     $vm->do_validate();
   }
 
+  /**
+   * @throw Markzero\Validation\Exception\ValidationException
+   * @throw Markzero\Http\Exception\ResourceNotFoundException
+   * @throw Markzero\Http\Exception\DuplicateResourceException
+   */
   static function create($user, $book, $params) {
     if ($user === null) {
       throw new ResourceNotFoundException();
@@ -64,7 +73,8 @@ class Rating extends AppModel {
   }
 
   /** 
-   * @throw ResourceNotFoundException
+   * @throw Markzero\Http\Exception\ResourceNotFoundException
+   * @throw Markzero\Validation\Exception\ValidationException
    */
   static function update($id, $params) {
 

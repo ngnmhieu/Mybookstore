@@ -1,10 +1,15 @@
 <?php
+use Markzero\Mvc\View;
+use Markzero\Mvc\AppController;
+use Markzero\Auth\Exception\AuthenticationFailedException;
+use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Validation\Exception\ValidationException;
 
 class SessionController extends AppController {
 
   function signIn() {
     $this->respond_to('html', function() {
-      $this->render(new HtmlView(array(), 'session/sign_in'));
+      $this->render(new View\HtmlView(array(), 'session/sign_in'));
     });
   }
 
