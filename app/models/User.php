@@ -6,7 +6,7 @@
  */
 class User extends AppModel {
   protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('email', 'name', 'password_hash');
+  protected static $attr_accessor = array('email', 'name', 'password_hash', 'ratings');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -16,6 +16,15 @@ class User extends AppModel {
   protected $name;
   /** @Column(type="string") **/
   protected $password_hash;
+  /**
+   * @OneToMany(targetEntity="Rating", mappedBy="user")
+   */
+  protected $ratings;
+  /**
+   * @ManyToMany(targetEntity="Book", inversedBy="users")
+   * @JoinTable(name="ratings")
+   */
+  protected $books;
 
   protected function _default() {
   }

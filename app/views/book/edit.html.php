@@ -2,8 +2,16 @@
 
 <h1>Edit Book #<?=$book->id?></h1>
   <form action="<?=webpath('book#update', array($book->id))?>" method="post">
-  <label for="name">Name: </label>
-  <input type="text" name="name" id="name" value="<?=$book->name?>">
+
+  <div>
+    <label for="name">Name: </label>
+    <input type="text" name="name" id="name" value="<?=$book->name?>">
+  </div>
+
+  <div>
+    <label for="description">Description: </label>
+    <textarea name="description" id="description"></textarea>
+  </div>
   <input type="submit" name="submit" value="Update">
 </form>
 

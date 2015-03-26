@@ -15,6 +15,8 @@ App::$router->draw(function($r) {
   $r->post('/book/([0-9]+)','book#update');
   $r->get('/book/add','book#add');
   $r->get('/book/([0-9]+)/edit','book#edit');
+  $r->post('/book/([0-9]+)/rate','book#rate');
+  $r->post('/book/([0-9]+)/rate/([0-9]+)','book#updateRate');
 
   $r->delete('/book/([0-9]+)/delete','book#delete');
   $r->post('/book/([0-9]+)/delete','book#delete');

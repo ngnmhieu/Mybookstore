@@ -4,8 +4,21 @@ class BookController extends AppController {
   public function index() {
     $books = Book::findAll();
 
-    $this->respond_to('html', function() use ($books) {
+    $user_ratings = array();
+    $user = UserSession::getUser();
+    foreach ($books as $book) {
+      $rating = $book->ratingByUser($user);
+      $user_ratings[$book->id] = !$rating ? null : array(
+        'id' => $rating->id,
+        'value' => $rating->value
+      );
+    }
+
+    $this->respond_to('html', function() use ($books, $user_ratings) {
       $data['books'] = $books;
+      $data['rating_values'] = Rating::$VALID_VALUES;
+      $data['user_ratings'] = $user_ratings;
+
       $this->render(new HtmlView($data, 'book/index'));
     });
 
@@ -36,9 +49,22 @@ class BookController extends AppController {
   public function show($id) {
     try {
       $book = Book::find($id);
+      $ratings = $book->ratings;
+      $top_related = $book->getTopRelated(5);
 
-      $this->respond_to('html', function() {
-        $this->render(new HtmlView(array(), 'book/show'));
+      $this->respond_to('html', function() use($book, $ratings, $top_related) {
+        $data['book'] = $book;
+        $data['ratings'] = array();
+        $data['top_related'] = $top_related;
+
+        foreach (Rating::$VALID_VALUES as $value) {
+          $data['ratings'][$value] = array();
+        }
+
+        foreach ($ratings as $rating) {
+          $data['ratings'][(int) $rating->value][] = $rating;
+        }
+        $this->render(new HtmlView($data, 'book/show'));
       });
 
     } catch(ResourceNotFoundException $e) {
@@ -127,6 +153,86 @@ class BookController extends AppController {
       $this->respond_to('json', function() use($e) {
         $this->response()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, '[Error] Transaction could not be deleted: '.$e->getMessage());
       });
+    }
+  }
+
+  function updateRate($book_id, $id) {
+    if (UserSession::isSignedIn()) {
+      try {
+        $rating = Rating::find($id);
+        if ($rating === null)
+          throw new ResourceNotFoundException();
+
+        if ($rating->user !== UserSession::getUser()) {
+          throw new ActionNotAuthorizedException();
+        }
+
+        Rating::update($id, $this->request()->request);
+
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+      } catch(ActionNotAuthorizedException $e) {
+
+        $this->respond_to('html', function() {
+          $this->response()->redirect('book', 'index');
+        });
+      } catch(ValidationException $e) {
+        
+        $this->respond_to('html', function() {
+          $this->response()->redirect('book', 'index');
+        });
+
+      } catch(ResourceNotFoundException $e) {
+
+        $this->respond_to('html', function() {
+          $this->response()->redirect('book', 'index');
+        });
+
+      }
+    } else {
+     
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+    }
+  }
+
+  function rate($id) {
+    if (UserSession::isSignedIn()) {
+      try {
+        $book = Book::find($id);
+        $user = UserSession::getUser();
+
+        Rating::create($user, $book, $this->request()->request);
+
+      $this->respond_to('html', function() {
+        $this->response()->redirect('book', 'index');
+      });
+
+      } catch(ValidationException $e) {
+        
+        $this->respond_to('html', function() {
+          $this->response()->redirect('book', 'index');
+        });
+
+      } catch(ResourceNotFoundException $e) {
+
+        // Book or User not found
+        $this->respond_to('html', function() {
+          $this->response()->redirect('book', 'index');
+        });
+
+      }
+    } else {
+
+      $this->respond_to('html', function() {
+        // User not signed in
+        $this->response()->redirect('book', 'index');
+      });
+
     }
   }
 
