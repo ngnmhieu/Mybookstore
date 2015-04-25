@@ -8,30 +8,31 @@ use Markzero\App;
  */
 
 App::$router->draw(function($r) {
-  $r->root('book#index');
+  $r->root('BookController','index');
 
   /** Book **/
-  $r->get('/book/','book#index');
-  $r->get('/book/([0-9]+)','book#show');
-  $r->post('/book/','book#create');
-  $r->post('/book/([0-9]+)','book#update');
-  $r->get('/book/add','book#add');
-  $r->get('/book/([0-9]+)/edit','book#edit');
-  $r->post('/book/([0-9]+)/rate','book#rate');
-  $r->post('/book/([0-9]+)/rate/([0-9]+)','book#updateRate');
+  $r->get('/book/','BookController','index');
+  $r->get('/book/([0-9]+)','BookController','show');
+  $r->post('/book/','BookController','create');
+  $r->post('/book/([0-9]+)','BookController','update');
+  $r->get('/book/add','BookController','add');
+  $r->get('/book/([0-9]+)/edit','BookController','edit');
+  $r->post('/book/([0-9]+)/rate','BookController','rate');
+  $r->post('/book/([0-9]+)/rate/([0-9]+)','BookController','updateRate');
 
-  $r->delete('/book/([0-9]+)/delete','book#delete');
-  $r->post('/book/([0-9]+)/delete','book#delete');
-  $r->get('/book/([0-9]+)/delete','book#delete');
+  $r->delete('/book/([0-9]+)/delete','BookController','delete');
+  $r->post('/book/([0-9]+)/delete','BookController','delete');
+  $r->get('/book/([0-9]+)/delete','BookController','delete');
 
 
   /** User **/
-  $r->get('/user/register','user#register');
-  $r->post('/user/','user#create');
+  $r->get('/user/register','UserController','register');
+  $r->post('/user/','UserController','create');
 
   /** Session **/
-  $r->get('/session/sign_in','session#signIn');
-  $r->get('/session/sign_out','session#delete');
-  $r->post('/session/','session#create');
+  $r->get('/session/sign_in','SessionController','signIn');
+  $r->get('/session/sign_out','SessionController','delete');
+  $r->post('/session/','SessionController','create');
+
 });
 

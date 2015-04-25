@@ -18,6 +18,6 @@
 <?php } ?>
 </ul>
 
-[ <a href="<?=webpath('book#index') ?>">Back to book list</a> ]
+[ <a href="<?=webpath('BookController#index') ?>">Back to book list</a> ]
 
 <?php $this->partial('common/footer'); ?>

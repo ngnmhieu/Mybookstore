@@ -1,7 +1,7 @@
 <?php $this->partial('common/header'); ?>
 
 <h1>Register</h1>
-  <form action="<?=webpath('user#create')?>" method="post">
+  <form action="<?=webpath('UserController#create')?>" method="post">
   <div>
     <label for="email">Email: </label>
     <input type="text" name="email" id="email">

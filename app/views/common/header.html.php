@@ -6,14 +6,14 @@
 </head>
 <body>
 <div>
-[ <a href="<?=webpath('book#index')?>">Books</a> ]
+[ <a href="<?=webpath('BookController#index')?>">Books</a> ]
 <?php if(UserSession::isSignedIn()) { ?>
   <?php $user = UserSession::getUser(); ?>
   Welcome, <?=$user->name?>!
-  [ <a href="<?=webpath('session#delete')?>">Sign Out</a> ]
+  [ <a href="<?=webpath('SessionController#delete')?>">Sign Out</a> ]
 <?php } else { ?>
-[ <a href="<?=webpath('user#register')?>">Register</a> ]
-[ <a href="<?=webpath('session#signIn')?>">Sign In</a> ]
+[ <a href="<?=webpath('UserController#register')?>">Register</a> ]
+[ <a href="<?=webpath('SessionController#signIn')?>">Sign In</a> ]
 <?php } ?>
 </div>
 <hr />

@@ -34,26 +34,26 @@ class User extends AppModel {
   protected function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->validate('name', new Validator\FunctionValidator(function($name) {
+    $vm->register('name', new Validator\FunctionValidator(function($name) {
       return !empty($name);
     }, array($this->name)), "Name is required");
 
-    $vm->validate('email', new Validator\FunctionValidator(function($email) {
+    $vm->register('email', new Validator\FunctionValidator(function($email) {
       return !empty($email);
     }, array($this->email)), "Email address is required");
 
-    $vm->validate('email', new Validator\EmailValidator($this->email), "Invalid Email address");
+    $vm->register('email', new Validator\EmailValidator($this->email), "Invalid Email address");
 
-    $vm->validate('email', new Validator\FunctionValidator(function($email) {
+    $vm->register('email', new Validator\FunctionValidator(function($email) {
       $existed_user = self::findOneBy(array('email' => $email));
       return $existed_user === null;
     }, array($this->email)), "Email address already existed");
 
-    $vm->do_validate();
+    $vm->doValidate();
   }
 
   static function create($params) {
-    $em = self::getEntityMananger();
+    $em = self::getEntityManager();
 
     $obj = new static();
     $obj->name   = $params->get('name');
@@ -65,11 +65,11 @@ class User extends AppModel {
     // extra validate
     $vm = self::createValidationManager();
 
-    $vm->validate('password', new Validator\FunctionValidator(function($password) {
+    $vm->register('password', new Validator\FunctionValidator(function($password) {
       return !empty($password);
     }, array($params->get('password'))), "Password is required");
 
-    $vm->do_validate();
+    $vm->doValidate();
 
     $obj->password_hash = password_hash($params->get('password'), PASSWORD_BCRYPT);
 

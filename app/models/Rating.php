@@ -33,12 +33,12 @@ class Rating extends AppModel {
   function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->validate('value', new Validator\RequireValidator($this->value), 'Value of the rating is required');
-    $vm->validate('value', new Validator\FunctionValidator(function() {
+    $vm->register('value', new Validator\RequireValidator($this->value), 'Value of the rating is required');
+    $vm->register('value', new Validator\FunctionValidator(function() {
       return in_array((int) $this->value, Rating::$VALID_VALUES);
     }), 'Rating value is invalid');
 
-    $vm->do_validate();
+    $vm->doValidate();
   }
 
   /**
@@ -65,7 +65,7 @@ class Rating extends AppModel {
     $rating->user = $user;
     $rating->book = $book;
     
-    $em = self::getEntityMananger();
+    $em = self::getEntityManager();
     $em->persist($rating);
     $em->flush();
 
@@ -85,7 +85,7 @@ class Rating extends AppModel {
     
     $rating->value = $params->get('rating[value]', null, true); 
     
-    $em = self::getEntityMananger();
+    $em = self::getEntityManager();
     $em->persist($rating);
     $em->flush();
 

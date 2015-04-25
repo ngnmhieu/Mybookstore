@@ -1,7 +1,7 @@
 <?php $this->partial('common/header'); ?>
 
 <h1>Create a Book</h1>
-  <form action="<?=webpath('book#create')?>" method="post">
+  <form action="<?=webpath('BookController#create')?>" method="post">
 
   <div>
     <label for="name">Name: </label>
@@ -16,6 +16,6 @@
   <input type="submit" name="submit" value="Create">
 </form>
 
-<a href="<?=webpath('book#index')?>">Return to book list.</a>
+<a href="<?=webpath('BookController#index')?>">Return to book list.</a>
 
 <?php $this->partial('common/footer'); ?>

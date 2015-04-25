@@ -31,7 +31,7 @@ class BookController extends AppController {
 
     $this->respond_to('json', function() use ($books) {
       $data = array_map(function($book) {
-        return $book->to_array();
+        return $book->toArray();
       }, $books);
       $this->render(new View\JsonView($data));
     });
@@ -42,12 +42,12 @@ class BookController extends AppController {
       $book = Book::create($this->request()->request);
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
     } catch(ValidationException $e) {
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'add');
+        $this->response()->redirect('BookController', 'add');
       });
 
     }
@@ -77,7 +77,7 @@ class BookController extends AppController {
     } catch(ResourceNotFoundException $e) {
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book','index');
+        $this->response()->redirect('BookController','index');
       });
 
     }
@@ -104,7 +104,7 @@ class BookController extends AppController {
     } catch(ResourceNotFoundException $e) {
 
       $this->respond_to('html', function() use($id) {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
     }
@@ -117,19 +117,19 @@ class BookController extends AppController {
       $book = Book::update($id, $this->request()->request);
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
     } catch(ResourceNotFoundException $e) {
 
       $this->respond_to('html', function() use($id) {
-        $this->response()->redirect('book', 'edit', array($id));
+        $this->response()->redirect('BookController', 'edit', array($id));
       });
 
     } catch(ValidationException $e) {
 
       $this->respond_to('html', function() use($id) {
-        $this->response()->redirect('book', 'edit', array($id));
+        $this->response()->redirect('BookController', 'edit', array($id));
       });
 
     }
@@ -139,7 +139,7 @@ class BookController extends AppController {
     try {
       Book::delete($id);
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
       $this->respond_to('json', function() {
@@ -149,12 +149,12 @@ class BookController extends AppController {
     } catch(ResourceNotFoundException $e) {
       
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
     } catch(\Exception $e) {
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
       $this->respond_to('json', function() use($e) {
@@ -177,31 +177,31 @@ class BookController extends AppController {
         Rating::update($id, $this->request()->request);
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
       } catch(ActionNotAuthorizedException $e) {
 
         $this->respond_to('html', function() {
-          $this->response()->redirect('book', 'index');
+          $this->response()->redirect('BookController', 'index');
         });
       } catch(ValidationException $e) {
         
         $this->respond_to('html', function() {
-          $this->response()->redirect('book', 'index');
+          $this->response()->redirect('BookController', 'index');
         });
 
       } catch(ResourceNotFoundException $e) {
 
         $this->respond_to('html', function() {
-          $this->response()->redirect('book', 'index');
+          $this->response()->redirect('BookController', 'index');
         });
 
       }
     } else {
      
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
     }
@@ -216,20 +216,20 @@ class BookController extends AppController {
         Rating::create($user, $book, $this->request()->request);
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
       } catch(ValidationException $e) {
         
         $this->respond_to('html', function() {
-          $this->response()->redirect('book', 'index');
+          $this->response()->redirect('BookController', 'index');
         });
 
       } catch(ResourceNotFoundException $e) {
 
         // Book or User not found
         $this->respond_to('html', function() {
-          $this->response()->redirect('book', 'index');
+          $this->response()->redirect('BookController', 'index');
         });
 
       }
@@ -237,7 +237,7 @@ class BookController extends AppController {
 
       $this->respond_to('html', function() {
         // User not signed in
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
     }

@@ -33,18 +33,18 @@ class Book extends AppModel {
   protected function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->validate('name', new Validator\FunctionValidator(function($name) {
+    $vm->register('name', new Validator\FunctionValidator(function($name) {
       return !empty($name);
     }, array($this->name)));
 
-    $vm->do_validate();
+    $vm->doValidate();
   }
 
   /**
    * @throw Markzero\Validation\Exception\ValidationException
    */
   static function create($params) {
-    $em = self::getEntityMananger();
+    $em = self::getEntityManager();
 
     $obj = new static();
     $obj->name   = $params->get('name');
@@ -61,7 +61,7 @@ class Book extends AppModel {
    *        Markzero\Validation\Exception\ValidationException
    */
   static function update($id, $params) {
-    $em = self::getEntityMananger();
+    $em = self::getEntityManager();
 
     $obj = static::find($id);
     if ($obj === null) {
@@ -135,7 +135,7 @@ class Book extends AppModel {
    * @param int $num top $num related Books
    */
   function getTopRelated($num) {
-    $em = self::getEntityMananger();
+    $em = self::getEntityManager();
 
     // books other than this
     $query = $em->createQuery('SELECT b FROM Book b WHERE b.id != :book_id');
