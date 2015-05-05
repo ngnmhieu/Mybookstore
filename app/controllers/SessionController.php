@@ -18,26 +18,26 @@ class SessionController extends AppController {
       UserSession::create($this->request()->request);
 
       $this->respond_to('html', function() {
-        $this->response()->redirect('book', 'index');
+        $this->response()->redirect('BookController', 'index');
       });
 
     } catch(ValidationException $e) {
       // Validation failed
       $this->respond_to('html', function() {
-        $this->response()->redirect('session', 'signIn');
+        $this->response()->redirect('SessionController', 'signIn');
       });
 
     } catch(ResourceNotFoundException $e) {
       // User not found
       $this->respond_to('html', function() {
-        $this->response()->redirect('session', 'signIn');
+        $this->response()->redirect('SessionController', 'signIn');
       });
 
     } catch(AuthenticationFailedException $e) {
 
       // User authentication failed
       $this->respond_to('html', function() {
-        $this->response()->redirect('session', 'signIn');
+        $this->response()->redirect('SessionController', 'signIn');
       });
     }
     
@@ -47,7 +47,7 @@ class SessionController extends AppController {
     UserSession::delete();
 
     $this->respond_to('html', function() {
-      $this->response()->redirect('book', 'index');
+      $this->response()->redirect('BookController', 'index');
     });
   }
 }
