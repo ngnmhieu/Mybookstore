@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Books</title>
+  <title>Products</title>
 </head>
 <body>
 <div>
-[ <a href="<?=webpath('BookController#index')?>">Books</a> ]
+[ <a href="<?=webpath('ProductController#index')?>">Products</a> ]
 <?php if(UserSession::isSignedIn()) { ?>
   <?php $user = UserSession::getUser(); ?>
   Welcome, <?=$user->name?>!

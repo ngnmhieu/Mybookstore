@@ -6,11 +6,11 @@ use Markzero\Http\Exception\ResourceNotFoundException;
 
 /**
  * @Entity 
- * @Table(name="books")
+ * @Table(name="products")
  **/
-class Book extends AppModel {
+class Product extends AppModel {
   protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('name', 'ratings', 'description');
+  protected static $attr_accessor = array('name', 'description', 'ratings');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -19,11 +19,11 @@ class Book extends AppModel {
   /** @Column(type="string") **/
   protected $description;
   /**
-   * @OneToMany(targetEntity="Rating", mappedBy="book")
+   * @OneToMany(targetEntity="Rating", mappedBy="product")
    */
   protected $ratings;
   /**
-   * @ManyToMany(targetEntity="User", mappedBy="books")
+   * @ManyToMany(targetEntity="User", mappedBy="products")
    */
   protected $users;
 
@@ -82,8 +82,8 @@ class Book extends AppModel {
    *        Exception
    */
   static function delete($id) {
-    $book = Book::find($id);
-    if ($book === null) {
+    $product = Product::find($id);
+    if ($product === null) {
       throw new ResourceNotFoundException();
     }
 
@@ -91,7 +91,7 @@ class Book extends AppModel {
     $conn->beginTransaction();
 
     try {
-      App::$em->remove($book); 
+      App::$em->remove($product); 
       App::$em->flush();
 
       $conn->commit();
@@ -107,13 +107,13 @@ class Book extends AppModel {
   function ratingByUser($user) {
     if ($user === null)
       return null;
-    $rating = Rating::findOneBy(array('user' => $user, 'book' => $this));
+    $rating = Rating::findOneBy(array('user' => $user, 'product' => $this));
 
     return $rating;
   }
 
   function meanRating() {
-    $ratings = Rating::findBy(array('book' => $this));
+    $ratings = Rating::findBy(array('product' => $this));
     $rating_sum = array_reduce($ratings, function($sum, $rating) {
       return $sum + $rating->value; 
     });
@@ -122,7 +122,7 @@ class Book extends AppModel {
   }
 
   function positiveRatingPercent() {
-    $ratings = Rating::findBy(array('book' => $this));
+    $ratings = Rating::findBy(array('product' => $this));
 
     $positive_ratings = array_filter($ratings, function($rating) {
       return ((int) $rating->value) >= 4; 
@@ -132,57 +132,57 @@ class Book extends AppModel {
   }
 
   /**
-   * @param int $num top $num related Books
+   * @param int $num top $num related Products
    */
   function getTopRelated($num) {
     $em = self::getEntityManager();
 
-    // books other than this
-    $query = $em->createQuery('SELECT b FROM Book b WHERE b.id != :book_id');
-    $query->setParameter(':book_id', $this->id);
-    $all_books = $query->getResult();
+    // products other than this
+    $query = $em->createQuery('SELECT b FROM Product b WHERE b.id != :product_id');
+    $query->setParameter(':product_id', $this->id);
+    $all_products = $query->getResult();
 
-    // users rated this book
+    // users rated this product
     $query = $em->createQuery('
-      SELECT u.id FROM User u JOIN u.books b 
-      WHERE b.id = :book_id GROUP BY u
+      SELECT u.id FROM User u JOIN u.products b 
+      WHERE b.id = :product_id GROUP BY u
     ');
-    $query->setParameter(':book_id', $this->id);
+    $query->setParameter(':product_id', $this->id);
     $uids_this = $query->getResult();
     $uids_this = array_flatten($uids_this);
 
     // calculate
     $scores = array();
-    $books_map = array();
-    foreach($all_books as $book) {
+    $products_map = array();
+    foreach($all_products as $product) {
       $query = $em->createQuery('
-        SELECT u.id FROM User u JOIN u.books b 
-        WHERE b.id = :book_id GROUP BY u
+        SELECT u.id FROM User u JOIN u.products b 
+        WHERE b.id = :product_id GROUP BY u
       ');
-      $query->setParameter(':book_id', $book->id);
+      $query->setParameter(':product_id', $product->id);
       $uids_that = $query->getResult();
       $uids_that = array_flatten($uids_that);
 
       $uids_both = array_intersect($uids_that, $uids_this);
-      $scores[$book->id] = count($uids_both) / count($uids_this);
+      $scores[$product->id] = count($uids_both) / count($uids_this);
 
       // store for later access by id
-      $books_map[$book->id] = $book;
+      $products_map[$product->id] = $product;
     }
   
     // sort with max on top
     arsort($scores);
 
-    // get the books
-    $top_related_books = array();
+    // get the products
+    $top_related_products = array();
     $i = 0;
-    foreach ($scores as $book_id => $score) {
+    foreach ($scores as $product_id => $score) {
       if ($i++ >= $num)
         break;
-      $top_related_books[] = $books_map[$book_id];
+      $top_related_products[] = $products_map[$product_id];
     }
 
-    return $top_related_books;
+    return $top_related_products;
   }
 
 }

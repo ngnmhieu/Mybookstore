@@ -8,36 +8,36 @@ use Markzero\Validation\Exception\ValidationException;
 class SessionController extends AppController {
 
   function signIn() {
-    $this->respond_to('html', function() {
+    $this->respondTo('html', function() {
       $this->render(new View\HtmlView(array(), 'session/sign_in'));
     });
   }
 
   function create() {
     try {
-      UserSession::create($this->request()->request);
+      UserSession::create($this->getRequest()->request);
 
-      $this->respond_to('html', function() {
-        $this->response()->redirect('BookController', 'index');
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('BookController', 'index');
       });
 
     } catch(ValidationException $e) {
       // Validation failed
-      $this->respond_to('html', function() {
-        $this->response()->redirect('SessionController', 'signIn');
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('SessionController', 'signIn');
       });
 
     } catch(ResourceNotFoundException $e) {
       // User not found
-      $this->respond_to('html', function() {
-        $this->response()->redirect('SessionController', 'signIn');
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('SessionController', 'signIn');
       });
 
     } catch(AuthenticationFailedException $e) {
 
       // User authentication failed
-      $this->respond_to('html', function() {
-        $this->response()->redirect('SessionController', 'signIn');
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('SessionController', 'signIn');
       });
     }
     
@@ -46,8 +46,8 @@ class SessionController extends AppController {
   function delete() {
     UserSession::delete();
 
-    $this->respond_to('html', function() {
-      $this->response()->redirect('BookController', 'index');
+    $this->respondTo('html', function() {
+      $this->getResponse()->redirect('BookController', 'index');
     });
   }
 }

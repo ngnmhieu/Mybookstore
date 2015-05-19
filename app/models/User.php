@@ -23,10 +23,10 @@ class User extends AppModel {
    */
   protected $ratings;
   /**
-   * @ManyToMany(targetEntity="Book", inversedBy="users")
+   * @ManyToMany(targetEntity="Product", inversedBy="users")
    * @JoinTable(name="ratings")
    */
-  protected $books;
+  protected $products;
 
   protected function _default() {
   }

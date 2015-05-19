@@ -1,4 +1,5 @@
 <?php
+use Markzero\App;
 use Markzero\Mvc\AppModel;
 use Markzero\Validation\Validator;
 use Markzero\Http\Exception\ResourceNotFoundException;
@@ -10,11 +11,15 @@ class UserSession extends AppModel {
   protected function _validate() { }
 
   static function setUser($user) {
-    $_SESSION['user.id'] = $user->id;
+    self::getSession()->set('user.id', $user->id);
   }
 
   static function unsetUser() {
-    $_SESSION['user.id'] = null;
+    self::getSession()->remove('user.id');
+  }
+
+  static function getSession() {
+    return App::$session;
   }
 
   /**
@@ -50,14 +55,16 @@ class UserSession extends AppModel {
    * @return boolean
    */
   static function isSignedIn() {
-    return isset($_SESSION['user.id']) && (User::find($_SESSION['user.id']) !== null);
+    $session = self::getSession();
+    return $session->has('user.id') && (User::find($session->get('user.id')) !== null);
   }
 
   /**
    * @return User|null
    */
   static function getUser() {
-    return self::isSignedIn() ? User::find($_SESSION['user.id']) : null;
+    $session = self::getSession();
+    return self::isSignedIn() ? User::find($session->get('user.id')) : null;
   }
 
   static function delete() {

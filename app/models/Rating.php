@@ -10,7 +10,7 @@ use Markzero\Http\Exception\DuplicateResourceException;
  */
 class Rating extends AppModel {
   protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('value', 'user', 'book');
+  protected static $attr_accessor = array('value', 'user', 'product');
 
   static public $VALID_VALUES = array(1,2,3,4,5);
   
@@ -23,9 +23,9 @@ class Rating extends AppModel {
    */
   protected $user;
   /**
-   * @ManyToOne(targetEntity="Book", inversedBy="ratings")
+   * @ManyToOne(targetEntity="Product", inversedBy="ratings")
    */
-  protected $book;
+  protected $product;
 
   function _default() {
   }
@@ -46,24 +46,24 @@ class Rating extends AppModel {
    * @throw Markzero\Http\Exception\ResourceNotFoundException
    * @throw Markzero\Http\Exception\DuplicateResourceException
    */
-  static function create($user, $book, $params) {
+  static function create($user, $product, $params) {
     if ($user === null) {
       throw new ResourceNotFoundException();
     } 
 
-    if ($book === null) {
+    if ($product === null) {
       throw new ResourceNotFoundException();
     } 
 
-    // one user can only rate a book once
-    if (self::findOneBy(array('user' => $user, 'book' => $book))) {
+    // one user can only rate a product once
+    if (self::findOneBy(array('user' => $user, 'product' => $product))) {
       throw new DuplicateResourceException();
     }
     
     $rating = new static();
     $rating->value = $params->get('rating[value]', null, true); 
     $rating->user = $user;
-    $rating->book = $book;
+    $rating->product = $product;
     
     $em = self::getEntityManager();
     $em->persist($rating);

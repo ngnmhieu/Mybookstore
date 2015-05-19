@@ -8,21 +8,21 @@ use Markzero\App;
  */
 
 App::$router->draw(function($r) {
-  $r->root('BookController','index');
+  $r->root('ProductController','index');
 
-  /** Book **/
-  $r->get('/book/','BookController','index');
-  $r->get('/book/([0-9]+)','BookController','show');
-  $r->post('/book/','BookController','create');
-  $r->post('/book/([0-9]+)','BookController','update');
-  $r->get('/book/add','BookController','add');
-  $r->get('/book/([0-9]+)/edit','BookController','edit');
-  $r->post('/book/([0-9]+)/rate','BookController','rate');
-  $r->post('/book/([0-9]+)/rate/([0-9]+)','BookController','updateRate');
+  /** Product **/
+  $r->get('/product/','ProductController','index');
+  $r->get('/product/([0-9]+)','ProductController','show');
+  $r->post('/product/','ProductController','create');
+  $r->post('/product/([0-9]+)','ProductController','update');
+  $r->get('/product/add','ProductController','add');
+  $r->get('/product/([0-9]+)/edit','ProductController','edit');
+  $r->post('/product/([0-9]+)/rate','ProductController','rate');
+  $r->post('/product/([0-9]+)/rate/([0-9]+)','ProductController','updateRate');
 
-  $r->delete('/book/([0-9]+)/delete','BookController','delete');
-  $r->post('/book/([0-9]+)/delete','BookController','delete');
-  $r->get('/book/([0-9]+)/delete','BookController','delete');
+  $r->delete('/product/([0-9]+)/delete','ProductController','delete');
+  $r->post('/product/([0-9]+)/delete','ProductController','delete');
+  $r->get('/product/([0-9]+)/delete','ProductController','delete');
 
 
   /** User **/
