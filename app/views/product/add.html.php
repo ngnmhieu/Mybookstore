@@ -8,14 +8,9 @@
     <input type="text" name="name" id="name">
   </div>
 
-  <div>
-    <label for="description">Description: </label>
-    <textarea name="description" id="description"></textarea>
-  </div>
-
   <input type="submit" name="submit" value="Create">
 </form>
 
-<a href="<?=webpath('ProductController#index')?>">Return to product list.</a>
+<a class="btn btn-default" href="<?=webpath('ProductController#index')?>">Return to product list.</a>
 
 <?php $this->partial('common/footer'); ?>

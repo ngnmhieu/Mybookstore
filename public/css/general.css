@@ -1,0 +1,8 @@
+#PageWrapper {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+#ProductList ul {
+  list-style: none;
+}

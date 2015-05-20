@@ -21,8 +21,12 @@ App::$router->draw(function($r) {
   $r->post('/product/([0-9]+)/rate/([0-9]+)','ProductController','updateRate');
 
   $r->delete('/product/([0-9]+)/delete','ProductController','delete');
-  $r->post('/product/([0-9]+)/delete','ProductController','delete');
   $r->get('/product/([0-9]+)/delete','ProductController','delete');
+
+  /** ProductDetail **/
+  $r->get('/product/([0-9]+)/detail/add','ProductDetailController','add');
+  $r->post('/product/([0-9]+)/detail','ProductDetailController','create');
+  $r->get('/product/([0-9]+)/detail/([0-9]+)/delete','ProductDetailController','delete');
 
 
   /** User **/

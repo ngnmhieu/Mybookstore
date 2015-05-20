@@ -10,14 +10,16 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  **/
 class Product extends AppModel {
   protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('name', 'description', 'ratings');
+  protected static $attr_accessor = array('name', 'ratings', 'details');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
   /** @Column(type="string") **/
   protected $name;
-  /** @Column(type="string") **/
-  protected $description;
+  /**
+   * @OneToMany(targetEntity="ProductDetail", mappedBy="product")
+   */
+  protected $details;
   /**
    * @OneToMany(targetEntity="Rating", mappedBy="product")
    */
@@ -48,7 +50,6 @@ class Product extends AppModel {
 
     $obj = new static();
     $obj->name   = $params->get('name');
-    $obj->description = $params->get('description');
 
     $em->persist($obj);
     $em->flush();
@@ -68,7 +69,6 @@ class Product extends AppModel {
       throw new ResourceNotFoundException();
     }
 
-    $obj->description = $params->get('description');
     $obj->name = $params->get('name');
 
     $em->persist($obj);

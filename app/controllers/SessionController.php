@@ -18,7 +18,7 @@ class SessionController extends AppController {
       UserSession::create($this->getRequest()->request);
 
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('BookController', 'index');
+        $this->getResponse()->redirect('ProductController', 'index');
       });
 
     } catch(ValidationException $e) {
@@ -47,7 +47,7 @@ class SessionController extends AppController {
     UserSession::delete();
 
     $this->respondTo('html', function() {
-      $this->getResponse()->redirect('BookController', 'index');
+      $this->getResponse()->redirect('ProductController', 'index');
     });
   }
 }

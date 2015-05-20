@@ -103,8 +103,8 @@ class ProductController extends AppController {
       $product = Product::find($id);
 
       $this->respondTo('html', function() use($product) {
-        $data['product'] = $product;
-        $this->render(new View\HtmlView($data, 'product/edit'));
+        $details = $product->details;
+        $this->render(new View\HtmlView(compact('product', 'details'), 'product/edit'));
       });
 
     } catch(ResourceNotFoundException $e) {

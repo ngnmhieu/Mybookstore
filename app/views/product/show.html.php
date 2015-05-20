@@ -1,7 +1,6 @@
 <?php $this->partial('common/header'); ?>
 
 <h1><?= $product->name ?></h1>
-<p><?= $product->description ?></p>
 
 <h3>People rate this product, also rate these products: </h3>
 <ul>

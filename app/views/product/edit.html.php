@@ -8,13 +8,36 @@
     <input type="text" name="name" id="name" value="<?=$product->name?>">
   </div>
 
-  <div>
-    <label for="description">Description: </label>
-    <textarea name="description" id="description"></textarea>
-  </div>
-  <input type="submit" name="submit" value="Update">
+  <input type="submit" class="btn btn-primary" name="submit" value="Update">
 </form>
 
-<a href="<?=webpath('ProductController#index')?>">Return to product list.</a>
+<br />
+
+<table class="table table-striped">
+   <tr>
+     <th>Detail ID</th>
+     <th>Title</th>
+     <th>Barcode</th>
+     <th>Barcode type</th>
+     <th>Price</th>
+     <th style="width: 15px"></th>
+   </tr>
+
+   <?php foreach ($details as $detail) { ?>
+     <tr>
+       <td><?=$detail->id?></td>
+       <td><?=$detail->title?></td>
+       <td><?=$detail->barcode?></td>
+       <td><?=$detail->barcode_type?></td>
+       <td><?=$detail->price?></td>
+       <td><a href="<?=webpath('ProductDetailController#delete', [$product->id, $detail->id])?>"><span class="fa fa-trash"></span></a></td>
+     </tr>
+   <?php }?>
+
+</table>
+
+<a href="<?=webpath('ProductDetailController#add', [$product->id])?>"><button class="btn btn-primary">Add Product detail</button></a>
+
+<a class="btn btn-default" href="<?=webpath('ProductController#index')?>">Return to product list.</a>
 
 <?php $this->partial('common/footer') ?>
