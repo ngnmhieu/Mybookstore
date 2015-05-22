@@ -28,9 +28,6 @@ class User extends AppModel {
    */
   protected $products;
 
-  protected function _default() {
-  }
-
   protected function _validate() {
     $vm = self::createValidationManager();
 

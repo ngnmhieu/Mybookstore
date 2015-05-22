@@ -1,6 +1,8 @@
 <?php
 use Markzero\Mvc\AppModel;
-use Markzero\Validation\Validator;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Markzero\Validation\Validator\RequireValidator;
+use Markzero\Validation\Validator\FunctionValidator;
 use Markzero\Validation\Exception\ValidationException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 
@@ -10,16 +12,24 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  **/
 class Product extends AppModel {
   protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('name', 'ratings', 'details');
+  protected static $attr_accessor = array('name', 'barcode', 'barcode_type', 'price', 'short_desc', 'description', 'ratings');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
   /** @Column(type="string") **/
   protected $name;
-  /**
-   * @OneToMany(targetEntity="ProductDetail", mappedBy="product")
-   */
-  protected $details;
+
+  /** @Column(type="string") **/
+  protected $barcode;
+  /** @Column(type="string") **/
+  protected $barcode_type; 
+  /** @Column(type="float") **/
+  protected $price;
+  /** @Column(type="text") **/
+  protected $short_desc;
+  /** @Column(type="text") **/
+  protected $description;
+
   /**
    * @OneToMany(targetEntity="Rating", mappedBy="product")
    */
@@ -29,13 +39,14 @@ class Product extends AppModel {
    */
   protected $users;
 
-  protected function _default() {
+  public function __construct() {
+    $this->ratings = new \Doctrine\Common\Collections\ArrayCollection();
   }
 
   protected function _validate() {
     $vm = self::createValidationManager();
 
-    $vm->register('name', new Validator\FunctionValidator(function($name) {
+    $vm->register('name', new FunctionValidator(function($name) {
       return !empty($name);
     }, array($this->name)));
 
@@ -43,38 +54,60 @@ class Product extends AppModel {
   }
 
   /**
+   * @param 
    * @throw Markzero\Validation\Exception\ValidationException
+   * @return Product
    */
-  static function create($params) {
+  static function create(ParameterBag $params) {
     $em = self::getEntityManager();
+    $vm = self::createValidationManager();
 
-    $obj = new static();
-    $obj->name   = $params->get('name');
+    $vm->validate(function($vm) use ($params) {
+      $name = $params->get('product[name]', '', true) ;
+      $vm->register('product[name]', new FunctionValidator(function() use($name) {
+        return !empty($name);
+      }));
+    });
 
-    $em->persist($obj);
+    $product = new static();
+    $product->name         = $params->get('product[name]', '', true);
+    $product->barcode      = $params->get('product[barcode]', '', true); 
+    $product->barcode_type = $params->get('product[barcode_type]', '', true); 
+    $product->short_desc   = $params->get('product[short_desc]', '', true); 
+    $product->description  = $params->get('product[description]', '', true); 
+    $price = floatval($params->get('product[price]', 0.0, true));
+    $product->price = $price;
+
+    $em->persist($product);
     $em->flush();
 
-    return $obj;
+    return $product;
   }
 
   /**
    * @throw Markzero\Http\Exception\ResourceNotFoundException
    *        Markzero\Validation\Exception\ValidationException
    */
-  static function update($id, $params) {
+  static function update($id, ParameterBag $params) {
     $em = self::getEntityManager();
 
-    $obj = static::find($id);
-    if ($obj === null) {
+    $product = static::find($id);
+    if ($product === null) {
       throw new ResourceNotFoundException();
     }
 
-    $obj->name = $params->get('name');
+    $product->name         = $params->get('product[name]', '', true);
+    $product->barcode      = $params->get('product[barcode]', '', true); 
+    $product->barcode_type = $params->get('product[barcode_type]', '', true); 
+    $product->short_desc   = $params->get('product[short_desc]', '', true); 
+    $product->description  = $params->get('product[description]', '', true); 
+    $price = floatval($params->get('product[price]', 0.0, true));
+    $product->price = $price;
 
-    $em->persist($obj);
+    $em->persist($product);
     $em->flush();
 
-    return $obj;
+    return $product;
   }
 
   /**
@@ -118,7 +151,9 @@ class Product extends AppModel {
       return $sum + $rating->value; 
     });
 
-    return $rating_sum / count($ratings);
+    $mean = count($ratings) > 0 ? $rating_sum / count($ratings) : 0;
+
+    return $mean;
   }
 
   function positiveRatingPercent() {
@@ -127,6 +162,10 @@ class Product extends AppModel {
     $positive_ratings = array_filter($ratings, function($rating) {
       return ((int) $rating->value) >= 4; 
     });
+
+    if (!count($ratings)) {
+      return 0;
+    }
 
     return 100 * count($positive_ratings) / count($ratings);
   }

@@ -27,9 +27,6 @@ class Rating extends AppModel {
    */
   protected $product;
 
-  function _default() {
-  }
-
   function _validate() {
     $vm = self::createValidationManager();
 

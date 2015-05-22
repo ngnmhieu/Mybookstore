@@ -7,7 +7,6 @@ use Markzero\Auth\Exception\AuthenticationFailedException;
 
 class UserSession extends AppModel {
 
-  protected function _default() { }
   protected function _validate() { }
 
   static function setUser($user) {

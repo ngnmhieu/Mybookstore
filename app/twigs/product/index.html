@@ -1,0 +1,11 @@
+{{ include('common/header.html') }}
+
+<div id="ProductList">
+  <ul>
+
+    {% for product in products %}
+    <li>{{ product.name }} {{product.price}} &euro;</li>
+    {% endfor %}
+
+  </ul>  
+</div>

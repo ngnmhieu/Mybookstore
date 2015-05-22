@@ -36,9 +36,6 @@ class ProductDetail extends AppModel {
    */
   protected $product;
 
-  protected function _default() {
-  }
-
   protected function _validate() {
     $vm = self::createValidationManager();
 

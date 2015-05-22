@@ -19,14 +19,25 @@ App::$router->draw(function($r) {
   $r->get('/product/([0-9]+)/edit','ProductController','edit');
   $r->post('/product/([0-9]+)/rate','ProductController','rate');
   $r->post('/product/([0-9]+)/rate/([0-9]+)','ProductController','updateRate');
-
   $r->delete('/product/([0-9]+)/delete','ProductController','delete');
   $r->get('/product/([0-9]+)/delete','ProductController','delete');
+
+  /** Admin\Product **/
+  $r->get('/admin/','Admin\PageController','index');
+  $r->get('/admin/product/','Admin\ProductController','index');
+  $r->get('/admin/product/([0-9]+)','Admin\ProductController','show');
+  $r->get('/admin/product/add','Admin\ProductController','add');
+  $r->get('/admin/product/([0-9]+)/edit','Admin\ProductController','edit');
+  $r->get('/admin/product/([0-9]+)/delete','Admin\ProductController','delete');
+  $r->post('/admin/product/','Admin\ProductController','create');
+  $r->post('/admin/product/([0-9]+)','Admin\ProductController','update');
+  $r->delete('/admin/product/([0-9]+)/delete','Admin\ProductController','delete');
 
   /** ProductDetail **/
   $r->get('/product/([0-9]+)/detail/add','ProductDetailController','add');
   $r->post('/product/([0-9]+)/detail','ProductDetailController','create');
-  $r->get('/product/([0-9]+)/detail/([0-9]+)/delete','ProductDetailController','delete');
+  $r->get('/product/detail/([0-9]+)/edit','ProductDetailController','edit');
+  $r->get('/product/detail/([0-9]+)/delete','ProductDetailController','delete');
 
 
   /** User **/

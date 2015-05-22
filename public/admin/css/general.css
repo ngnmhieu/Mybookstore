@@ -1,0 +1,48 @@
+.clear {
+  clear: both;
+}
+
+#PageWrapper {
+}
+
+#MainNavbar {
+  background: #eee;
+  margin: 0;
+  border-radius: 0;
+}
+
+.row [class*="col-xs-"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+  color: #333;
+  background: #ccc;
+}
+
+main #MainMenuWrap{
+  height: 100vh;
+}
+main #MainContent {
+  padding: 20px;
+}
+
+/** Product **/
+#ProductControls {
+  margin: 10px 0;
+}
+
+#ProductControls a {
+  float: right;
+}
+
+#ProductForm h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+#ProductForm .tab-pane {
+  padding-top: 20px;
+}
+
