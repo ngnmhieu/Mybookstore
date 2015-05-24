@@ -9,7 +9,7 @@ class SessionController extends AppController {
 
   function signIn() {
     $this->respondTo('html', function() {
-      $this->render(new View\HtmlView(array(), 'session/sign_in'));
+      $this->render(new View\TwigView(array(), 'session/sign_in'));
     });
   }
 

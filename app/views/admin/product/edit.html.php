@@ -1,6 +1,7 @@
 <?php $this->partial('admin/common/header'); ?>
 
 <div id="ProductForm">
+  <a class="btn btn-default" href="<?=webpath('Admin\ProductController#index')?>"><span class="fa fa-reply"></span> Return</a>
   <h3>Update Product</h3>
 
   <form action="<?=webpath('Admin\ProductController#update', array($product->id))?>" method="post">
@@ -21,7 +22,6 @@
       </div>
     </div>
 
-    <a class="btn btn-default" href="<?=webpath('Admin\ProductController#index')?>">Return</a>
     <input type="submit" class="btn btn-primary" name="submit" value="Save">
 
   </form>

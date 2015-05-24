@@ -90,11 +90,19 @@ class Product extends AppModel {
    */
   static function update($id, ParameterBag $params) {
     $em = self::getEntityManager();
+    $vm = self::createValidationManager();
 
     $product = static::find($id);
     if ($product === null) {
       throw new ResourceNotFoundException();
     }
+
+    $vm->validate(function($vm) use ($params) {
+      $name = $params->get('product[name]', '', true) ;
+      $vm->register('product[name]', new FunctionValidator(function() use($name) {
+        return !empty($name);
+      }));
+    });
 
     $product->name         = $params->get('product[name]', '', true);
     $product->barcode      = $params->get('product[barcode]', '', true); 

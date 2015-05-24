@@ -1,0 +1,23 @@
+{% include('common/header.html') %}
+
+<h1>{{ product.name }}</h1>
+
+<h3>People rate this product, also rate these products: </h3>
+<ul>
+  {% for product in top_related %}
+  <li>{{ product.name }}</li>
+  {% endfor %}
+</ul>
+
+<h3>Ratings</h3>
+
+<ul>
+  {% for rating in ratings %}
+  <li>{{ rating.value }} Stars: {{ rating.count }}</li>
+  {% endfor %}
+</ul>
+
+[ <a href="{{ webpath('ProductController#index') }}">Back to product list</a> ]
+
+{% include('common/footer.html') %}
+

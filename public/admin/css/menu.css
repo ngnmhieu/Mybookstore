@@ -1,7 +1,6 @@
-#MainMenuWrap {
+#MainMenuWrap aside {
   display: block;
   width: 100%;
-  background: #F8F8F8;
 }
 .content {
   display: block;

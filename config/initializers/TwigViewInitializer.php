@@ -2,6 +2,7 @@
 use Markzero\App;
 use Markzero\Mvc\View\TwigView;
 
-TwigView::setTemplatePath(App::$APP_PATH.'app/twigs/');
+TwigView::setTemplatePaths(array(App::$APP_PATH.'app/twigs/'));
 
-TwigView::setTwigConfig(array());
+TwigView::configEnvironment(function($twig) {
+});

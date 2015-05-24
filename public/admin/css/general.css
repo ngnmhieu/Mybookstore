@@ -21,8 +21,9 @@
   background: #ccc;
 }
 
-main #MainMenuWrap{
+main #MainMenuWrap {
   height: 100vh;
+  background: #F8F8F8;
 }
 main #MainContent {
   padding: 20px;
@@ -38,7 +39,7 @@ main #MainContent {
 }
 
 #ProductForm h3 {
-  margin-top: 0;
+  margin-top: 10px;
   margin-bottom: 20px;
 }
 

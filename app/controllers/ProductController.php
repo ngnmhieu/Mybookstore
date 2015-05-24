@@ -1,5 +1,7 @@
 <?php
-use Markzero\Mvc\View;
+use Markzero\Mvc\View\TwigView;
+use Markzero\Mvc\View\JsonView;
+use Markzero\Mvc\View\HtmlView;
 use Markzero\Mvc\AppController;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Auth\Exception\ActionNotAuthorizedException;
@@ -15,14 +17,14 @@ class ProductController extends AppController {
 
       $data['products'] = $products;
 
-      $this->render(new View\TwigView('product/index.html', $data));
+      $this->render(new TwigView('product/index.html', $data));
     });
 
     $this->respondTo('json', function() use ($products) {
       $data = array_map(function($product) {
         return $product->toArray();
       }, $products);
-      $this->render(new View\JsonView($data));
+      $this->render(new JsonView($data));
     });
   }
 
@@ -37,14 +39,25 @@ class ProductController extends AppController {
         $data['ratings'] = array();
         $data['top_related'] = $top_related;
 
+        $count = array();
         foreach (Rating::$VALID_VALUES as $value) {
-          $data['ratings'][$value] = array();
+          $count[$value] = 0;
         }
 
         foreach ($ratings as $rating) {
-          $data['ratings'][(int) $rating->value][] = $rating;
+          ++$count[$rating->value];
         }
-        $this->render(new View\HtmlView($data, 'product/show'));
+
+        foreach (Rating::$VALID_VALUES as $value) {
+          $rating = array(
+            'value' => $value,
+            'count' => $count[$value]
+          );
+
+          $data['ratings'][] = $rating;
+        }
+
+        $this->render(new TwigView('product/show.html',$data));
       });
 
     } catch(ResourceNotFoundException $e) {

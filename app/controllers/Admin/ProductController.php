@@ -1,7 +1,7 @@
 <?php
 namespace Admin;
 
-use Markzero\Mvc\View\HtmlView;
+use Markzero\Mvc\View\TwigView;
 use Markzero\Mvc\AppController;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Auth\Exception\ActionNotAuthorizedException;
@@ -14,7 +14,7 @@ class ProductController extends AppController {
     $products = \Product::findAll();
 
     $this->respondTo('html', function() use($products) {
-      $this->render(new HtmlView(compact('products'), 'admin/product/index'));
+      $this->render(new TwigView('admin/product/index.html',compact('products')));
     });
   }
 
@@ -53,8 +53,9 @@ class ProductController extends AppController {
 
       $inputs = $session->getOldInputBag();
       $errors = $session->getErrorBag();
+      $product = new \Product();
 
-      $this->render(new HtmlView(compact('errors', 'inputs'), 'admin/product/add'));
+      $this->render(new TwigView('admin/product/add.html', compact('errors', 'inputs', 'product')));
     });
 
   }
@@ -69,7 +70,7 @@ class ProductController extends AppController {
         $errors = $session->getErrorBag();
         
         $data = compact('product','inputs', 'errors');
-        $this->render(new HtmlView($data, 'admin/product/edit'));
+        $this->render(new TwigView('admin/product/edit.html', $data));
       });
 
     } catch(ResourceNotFoundException $e) {

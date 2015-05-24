@@ -2,7 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/css/general.css">
   <title>{{ page_title }}</title>
 </head>
 <body>
-  
+  <div id="PageWrapper">
+    <div>
+      [ <a href="{{ webpath('ProductController#index') }}">Products</a> ]
+      {% if false %}
+
+        {% set user = {'name': 'sdf'} %} 
+        Welcome, {{ user.name }}!
+        [ <a href="{{ webpath('SessionController#delete') }}">Sign Out</a> ]
+
+      {% else %}
+
+        [ <a href="{{ webpath('UserController#register') }}">Register</a> ]
+        [ <a href="{{ webpath('SessionController#signIn') }}">Sign In</a> ]
+
+      {% endif %}
+    </div>
+    <hr />
+

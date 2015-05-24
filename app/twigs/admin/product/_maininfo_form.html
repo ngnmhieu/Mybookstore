@@ -1,0 +1,45 @@
+<table class="table table-striped">
+
+  <tr class="form-group {{ errors.get('product[name]', null, true) ? 'has-error' : '' }}">
+    <td><label for="name">Name</label></td>
+    <td><input type="text" name="product[name]" value="{{ inputs.get('product[name]', product.name, true) }}" class="form-control" id="name"></td>
+  </tr>
+
+
+  <tr>
+    <td><label for="barcode">Barcode</label></td>
+    <td><input type="text" name="product[barcode]" value="{{ inputs.get('product[barcode]', product.barcode, true) }}" class="form-control" id="barcode"></td>
+  </tr>
+
+  <tr>
+    <td><label for="barcode_type">Barcode Type</label></td>
+    <td>
+      <select name="product[barcode_type]" id="barcode_type">
+        <option value="ean">EAN</option>
+        <option value="isbn10">ISBN-10</option>
+        <option value="isbn13">ISBN-13</option>
+      </select>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td><label for="price">Price</label></td>
+    <td><input type="text" name="product[price]" value="{{ inputs.get('product[price]', product.price, true) }}" class="form-control" id="price"></td>
+  </tr>
+
+  <tr>
+    <td><label for="short_desc">Short Description</label></td>
+    <td>
+      <textarea id="short_desc" name="product[short_desc]" class="form-control" cols="30" rows="3">{{ inputs.get("product[short_desc]", product.short_desc, true) }}</textarea>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td><label for="description">Description</label></td>
+    <td>
+      <textarea id="description" name="product[description]" class="form-control" cols="30" rows="3">{{ inputs.get("product[description]", product.description, true) }}</textarea>
+    </td>
+  </tr>
+</table>

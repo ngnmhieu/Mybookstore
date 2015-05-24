@@ -4,8 +4,12 @@
   <ul>
 
     {% for product in products %}
-    <li>{{ product.name }} {{product.price}} &euro;</li>
+    <li>
+      <a href="{{ webpath('ProductController#show', [product.id]) }}">{{ product.name }}</a> {{product.price}} &euro;
+    </li>
     {% endfor %}
 
   </ul>  
 </div>
+
+{{ include('common/footer.html') }}

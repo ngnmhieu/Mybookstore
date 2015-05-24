@@ -16,10 +16,10 @@
 <body>
   <div id="PageWrapper">
 
-  <?php $this->partial('admin/common/navbar') ?>
+  {% include('admin/common/navbar.html') %}
 
   <main class="container-fluid">
     <div class="row">
-      <?php $this->partial('admin/common/sidebar') ?>
+      {% include('admin/common/sidebar.html') %}
 
       <div class="col-xs-10" id="MainContent">
