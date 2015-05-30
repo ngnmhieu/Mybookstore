@@ -1,4 +1,6 @@
 <?php
+namespace App\Models; 
+
 use Markzero\App;
 use Markzero\Mvc\AppModel;
 use Markzero\Validation\Validator;

@@ -1,0 +1,35 @@
+{% include('admin/common/header.html') %}
+
+<div id="GBookSearch">
+  <form action="{{ webpath('Admin\\ProductController#importGoogle') }}" method="get" class="form-inline">
+    <h3>Search Google Book</h3>
+    <input type="text" class="form-control" placeholder="Name, author, publisher, year..." style="width: 400px" name="keywords" id="keywords" />
+    <button class="btn btn-primary">Search</button>
+  </form>
+</div>
+
+{% if books %}
+<table class="table table-striped" id="GBookSearchResult">
+  <tr>
+    <th>Action</th>
+    <th>Image</th>
+    <th>Title</th>
+    <th>Authors</th>
+  </tr>
+  {% for book in books %}
+  <tr>
+    <td>
+      <form action="{{ webpath('Admin\\ProductController#addFromGoogle') }}" method="post">
+        <input type="hidden" name="book_id" id="book_id" value="{{ book.id }}" />
+        <button type="submit" class="btn btn-default"><span class="fa fa-cloud-download"></span> Save</button>
+      </form>
+    </td>
+    <td><img src="{{ book.image }}" alt="" /></td>
+    <td>{{ book.title }}</td>
+    <td>{{ book.authors | join(', ') }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% include('admin/common/footer.html') %}

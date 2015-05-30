@@ -1,5 +1,8 @@
 <?php
+namespace App\Models; 
+
 use Markzero\Mvc\AppModel;
+use App\Lib\GoogleBook;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Markzero\Validation\Validator\RequireValidator;
 use Markzero\Validation\Validator\FunctionValidator;
@@ -11,8 +14,9 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  * @Table(name="products")
  **/
 class Product extends AppModel {
-  protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('name', 'barcode', 'barcode_type', 'price', 'short_desc', 'description', 'ratings');
+
+  protected static $readable = array('id');
+  protected static $accessible = array('name', 'barcode', 'barcode_type', 'price', 'short_desc', 'description', 'ratings', 'category');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -38,6 +42,10 @@ class Product extends AppModel {
    * @ManyToMany(targetEntity="User", mappedBy="products")
    */
   protected $users;
+  /**
+   * @ManyToOne(targetEntity="Category", inversedBy="products")
+   */
+  protected $category;
 
   public function __construct() {
     $this->ratings = new \Doctrine\Common\Collections\ArrayCollection();
@@ -78,6 +86,14 @@ class Product extends AppModel {
     $price = floatval($params->get('product[price]', 0.0, true));
     $product->price = $price;
 
+    $catid = $params->get('product[category_id]', null, true);
+    $cat = Category::find($catid); 
+
+    if ($cat === null)
+      throw new ResourceNotFoundException('category cannot be found');
+
+    $product->category = $cat;
+
     $em->persist($product);
     $em->flush();
 
@@ -112,6 +128,14 @@ class Product extends AppModel {
     $price = floatval($params->get('product[price]', 0.0, true));
     $product->price = $price;
 
+    $catid = $params->get('product[category_id]', null, true);
+    $cat = Category::find($catid); 
+
+    if ($cat === null)
+      throw new ResourceNotFoundException('category cannot be found');
+
+    $product->category = $cat;
+
     $em->persist($product);
     $em->flush();
 
@@ -140,6 +164,42 @@ class Product extends AppModel {
       $conn->rollback();
       throw $e;
     }
+  }
+
+  /**
+   * Return latest books
+   */
+  static function getLatest() {
+    return static::findBy(array(), array('id' => 'desc'), 12);
+  }
+
+  /**
+   * Create new book with data from GoogleBook
+   * @param App\Lib\GoogleBook
+   * @return Product
+   */
+  static function createFromGoogleBook(GoogleBook $gbook) {
+    $em = self::getEntityManager();
+    $book = new static();
+
+    $data = $gbook->getData()->volumeInfo;
+
+    $book->name         = $data->title;
+    $barcode = $data->industryIdentifiers[0];
+    $book->barcode      = $barcode->identifier;
+    $book->barcode_type = $barcode->type;
+    $book->description  = $data->description ?: '';
+    $book->short_desc   = '';
+    $book->price = 0.0;
+
+    if (isset($data->saleInfo)) {
+      $book->price = $data->saleInfo->listPrice->amount;
+    }
+
+    $em->persist($book);
+    $em->flush();
+
+    return $book;
   }
 
   /**

@@ -36,6 +36,7 @@ main #MainContent {
 
 #ProductControls a {
   float: right;
+  margin-left: 5px;
 }
 
 #ProductForm h3 {
@@ -47,3 +48,7 @@ main #MainContent {
   padding-top: 20px;
 }
 
+/** Google Book **/
+#GBookSearchResult {
+  margin-top: 10px;
+}

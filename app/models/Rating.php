@@ -1,4 +1,6 @@
 <?php
+namespace App\Models; 
+
 use Markzero\Mvc\AppModel;
 use Markzero\Validation\Validator;
 use Markzero\Http\Exception\ResourceNotFoundException;
@@ -9,8 +11,8 @@ use Markzero\Http\Exception\DuplicateResourceException;
  * @Table(name="ratings")
  */
 class Rating extends AppModel {
-  protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('value', 'user', 'product');
+  protected static $readable = array('id');
+  protected static $accessible = array('value', 'user', 'product');
 
   static public $VALID_VALUES = array(1,2,3,4,5);
   

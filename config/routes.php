@@ -32,6 +32,16 @@ App::$router->draw(function($r) {
   $r->post('/admin/product/','Admin\ProductController','create');
   $r->post('/admin/product/([0-9]+)','Admin\ProductController','update');
   $r->delete('/admin/product/([0-9]+)/delete','Admin\ProductController','delete');
+  $r->get('/admin/product/googlebook/import','Admin\ProductController','importGoogle');
+  $r->post('/admin/product/googlebook/add','Admin\ProductController','addFromGoogle');
+
+  /** Admin\Category **/
+  $r->get('/admin/category/','Admin\CategoryController','index');
+  $r->get('/admin/category/([0-9]+)','Admin\CategoryController','show');
+  $r->get('/admin/category/([0-9]+)/edit','Admin\CategoryController','edit');
+  $r->get('/admin/category/add','Admin\CategoryController','add');
+  $r->post('/admin/category/','Admin\CategoryController','create');
+  $r->get('/admin/category/([0-9]+)/delete','Admin\CategoryController','delete');
 
   /** ProductDetail **/
   $r->get('/product/([0-9]+)/detail/add','ProductDetailController','add');

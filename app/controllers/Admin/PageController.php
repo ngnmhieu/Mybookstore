@@ -3,13 +3,13 @@ namespace Admin;
 
 use Markzero\Mvc\View\HtmlView;
 use Markzero\Mvc\View\TwigView;
-use Markzero\Mvc\AppController;
+use App\Controllers\ApplicationController;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Auth\Exception\ActionNotAuthorizedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class PageController extends AppController {
+class PageController extends ApplicationController {
 
   public function index() {
     $this->respondTo('html', function() {

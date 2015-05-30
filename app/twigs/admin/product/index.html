@@ -2,7 +2,10 @@
 
     <div id="ProductControls">
       <a href="{{ webpath('Admin\\ProductController#add') }}">
-        <button type="button" class="btn btn-primary"><span class="fa fa-plus fa-lg"></span> Add Product</button>
+        <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Product</button>
+      </a>
+      <a href="{{ webpath('Admin\\ProductController#importGoogle') }}">
+        <button type="button" class="btn btn-default"><span class="fa fa-cloud "></span> Import</button>
       </a>
       <div class="clear"></div>
     </div>

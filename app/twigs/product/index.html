@@ -1,15 +1,16 @@
 {{ include('common/header.html') }}
+<main>
+  <div>
+    <h3>Latest books</h3>
+    <hr class="underline" />
+  </div>
 
-<div id="ProductList">
-  <ul>
-
-    {% for product in products %}
-    <li>
+  <div class="row" id="ProductList">
+      {% for product in products %}
+      <div class="col-xs-2">
       <a href="{{ webpath('ProductController#show', [product.id]) }}">{{ product.name }}</a> {{product.price}} &euro;
-    </li>
-    {% endfor %}
-
-  </ul>  
-</div>
-
+      </div>
+      {% endfor %}
+  </div>
+</main>
 {{ include('common/footer.html') }}

@@ -1,4 +1,6 @@
 <?php
+namespace App\Models; 
+
 use Markzero\Mvc\AppModel;
 use Markzero\Validation\Validator;
 
@@ -7,8 +9,8 @@ use Markzero\Validation\Validator;
  * @Table(name="users")
  */
 class User extends AppModel {
-  protected static $attr_reader = array('id');
-  protected static $attr_accessor = array('email', 'name', 'password_hash', 'ratings');
+  protected static $readable = array('id');
+  protected static $accessible = array('email', 'name', 'password_hash', 'ratings');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;

@@ -1,15 +1,16 @@
 <?php
+use App\Models\UserSession; 
 use Markzero\Mvc\View;
-use Markzero\Mvc\AppController;
+use App\Controllers\ApplicationController;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class SessionController extends AppController {
+class SessionController extends ApplicationController {
 
   function signIn() {
     $this->respondTo('html', function() {
-      $this->render(new View\TwigView(array(), 'session/sign_in'));
+      $this->render(new View\TwigView('session/sign_in.html'));
     });
   }
 

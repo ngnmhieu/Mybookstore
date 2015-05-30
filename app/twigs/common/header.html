@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/css/general.css">
-  <title>{{ page_title }}</title>
-</head>
-<body>
-  <div id="PageWrapper">
-    <div>
-      [ <a href="{{ webpath('ProductController#index') }}">Products</a> ]
-      {% if false %}
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/general.css">
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <title>{{ page_title }}</title>
+  </head>
+  <body>
+    <div id="PageWrapper">
+      <header>
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+              <a class="navbar-brand" href="{{ webpath('ProductController#index') }}">Bookstore</a>
+            </div>
 
-        {% set user = {'name': 'sdf'} %} 
-        Welcome, {{ user.name }}!
-        [ <a href="{{ webpath('SessionController#delete') }}">Sign Out</a> ]
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse">
+              <ul class="nav navbar-nav">
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                {% if is_signed_in %}
+                <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.name }} <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Profile</a></li>
+                  <li class="divider"></li>
+                  <li><a href="{{ webpath('SessionController#delete') }}">Sign out</a></li>
+                </ul>
+                </li>
 
-      {% else %}
+                {% else %}
 
-        [ <a href="{{ webpath('UserController#register') }}">Register</a> ]
-        [ <a href="{{ webpath('SessionController#signIn') }}">Sign In</a> ]
+                <li><a href="{{ webpath('UserController#register') }}">Register</a></li>
+                <li><a href="{{ webpath('SessionController#signIn') }}">Sign In</a></li>
 
-      {% endif %}
-    </div>
-    <hr />
+                {% endif %}
+              </ul>
+            </div><!-- /.navbar-collapse -->
+          </div><!-- /.container-fluid -->
+        </nav>
+      </header>
 

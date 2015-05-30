@@ -1,30 +1,40 @@
 <?php
+
+use App\Models\Product; 
+use App\Models\UserSession; 
+use App\Controllers\ApplicationController;
 use Markzero\Mvc\View\TwigView;
 use Markzero\Mvc\View\JsonView;
 use Markzero\Mvc\View\HtmlView;
-use Markzero\Mvc\AppController;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Auth\Exception\ActionNotAuthorizedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class ProductController extends AppController {
+class ProductController extends ApplicationController {
+
+  public function getUserReplacements() {
+    $replacements = array();
+
+    $signed_in = UserSession::isSignedIn();
+    $replacements['is_signed_in'] = $signed_in;
+    $replacements['user'] = $signed_in ?  UserSession::getUser() : new \User(); 
+
+    return $replacements;
+  }
 
   public function index() {
     $products = Product::findAll();
+    $latests = Product::getLatest();
 
-    $this->respondTo('html', function() use ($products) {
+    $this->respondTo('html', function() use ($products, $latests) {
 
       $data['products'] = $products;
+      $data['latests'] = $latests;
+      $user_replacements = $this->getUserReplacements();
+      $data = array_merge($user_replacements, $data);
 
       $this->render(new TwigView('product/index.html', $data));
-    });
-
-    $this->respondTo('json', function() use ($products) {
-      $data = array_map(function($product) {
-        return $product->toArray();
-      }, $products);
-      $this->render(new JsonView($data));
     });
   }
 

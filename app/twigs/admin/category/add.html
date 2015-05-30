@@ -1,0 +1,17 @@
+{% include('admin/common/header.html') %}
+
+<div id="CategoryForm">
+
+  <a class="btn btn-default" href="{{ webpath('Admin\\CategoryController#index') }}"><span class="fa fa-reply"></span> Return</a>
+  <h3>Create Category</h3>
+
+  <form action="{{ webpath('Admin\\CategoryController#create') }}" method="post" class="form-inline">
+    <label for="name">Name: </label>
+    <input type="text" class="form-control" name="name" id="name" value="" />
+    <input type="submit" class="btn btn-primary" name="submit" value="Save">
+  </form>
+
+</div>
+
+{% include('admin/common/footer.html') %}
+
