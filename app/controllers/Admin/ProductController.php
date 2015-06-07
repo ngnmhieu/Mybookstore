@@ -17,7 +17,7 @@ class ProductController extends ApplicationController {
     $products = Product::findAll();
 
     $this->respondTo('html', function() use($products) {
-      $this->render(new TwigView('admin/product/index.html',compact('products')));
+      $this->render(new TwigView('admin/product/index.html', compact('products')));
     });
   }
 

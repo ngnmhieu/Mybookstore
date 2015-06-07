@@ -30,9 +30,24 @@ class Book
   private $title;
 
   /**
+   * @var string
+   */
+  private $subtitle;
+
+  /**
    * @var array
    */
   private $authors;
+
+  /**
+   * @var array
+   */
+  private $categories;
+
+  /**
+   * @var string
+   */
+  private $mainCategory;
 
   /**
    * @var string
@@ -146,6 +161,8 @@ class Book
     $this->title               = $volume_info->title;
     $this->subtitle            = $this->getAttribute($volume_info, 'subtitle', '');
     $this->authors             = $this->getAttribute($volume_info, 'authors', []);
+    $this->categories          = $this->getAttribute($volume_info, 'categories', []);
+    $this->mainCategory        = $this->getAttribute($volume_info, 'mainCategories');
     $this->publisher           = $this->getAttribute($volume_info, 'publisher', '');
     $this->publishedDate       = $this->parseDate($this->getAttribute($volume_info, 'publishedDate'));
     $this->description         = $this->getAttribute($volume_info, 'description', '');
@@ -158,7 +175,7 @@ class Book
 
     $this->setIdentifiers($this->getAttribute($volume_info, 'industryIdentifiers', []));
     $this->setImages($this->getAttribute($volume_info, 'imageLinks'));
-    $this->setPrices($this->getAttribute($volume_info, 'saleInfo'));
+    $this->setPrices($this->getAttribute($data, 'saleInfo'));
   }
 
 
@@ -176,8 +193,8 @@ class Book
     
     $retail_price = $this->getAttribute($sale_info, 'retailPrice');
     if ($retail_price) {
-      $this->listPrice = $this->getAttribute($retail_price, 'amount');
-      $this->listPriceCurrency = $this->getAttribute($retail_price, 'currencyCode');
+      $this->retailPrice = $this->getAttribute($retail_price, 'amount');
+      $this->retailPriceCurrency = $this->getAttribute($retail_price, 'currencyCode');
     }
 
     return $this;
@@ -307,11 +324,35 @@ class Book
   }
 
   /**
+   * @return string
+   */
+  public function getSubtitle()
+  {
+    return $this->subtitle;
+  }
+
+  /**
    * @return array
    */
   public function getAuthors()
   {
     return $this->authors;
+  }
+
+  /**
+   * @return array
+   */
+  public function getCategories()
+  {
+    return $this->categories;
+  }
+
+  /**
+   * @return array
+   */
+  public function getMainCategory()
+  {
+    return $this->mainCategory;
   }
 
   /**
@@ -440,5 +481,17 @@ class Book
   public function getRetailPriceCurrency()
   {
     return $this->retailPriceCurrency;
+  }
+
+  public function getPreviewLink() {
+    return $this->previewLink;
+  }
+
+  public function getInfoLink() {
+    return $this->infoLink;
+  }
+
+  public function getCanonicalVolumeLink() {
+    return $this->canonicalVolumeLink;
   }
 }

@@ -23,25 +23,25 @@
         <button type="submit" class="btn btn-default"><span class="fa fa-cloud-download"></span> Save</button>
       </form>
     </td>
-    <td><img src="{{ book.getThumbnail }}" /></td>
+    <td><a href="{{ book.getInfoLink }}" target="_blank"><img src="{{ book.getThumbnail }}" /></a></td>
     <td>
+      <h4>{{ book.getTitle }}</h4>
+      <span>{{ book.getAuthors | join(', ') }}</span>
       <table class="gBookInfoGrid">
-        <tr>
-          <td>Title</td>
-          <td>{{ book.getTitle }}</td>
-        </tr>
         <tr>
           <td>Google Book ID</td>
           <td>{{ book.getId }}</td>
         </tr>
         <tr>
-          <td>Authors</td>
-          <td>{{ book.getAuthors | join(', ') }}</td>
-        </tr>
-        <tr>
           <td>Published</td>
           <td>{{ book.getPublishedDate | date('Y') }} by {{ book.getPublisher }}</td>
         </tr>
+        {% if(book.getCategories) %}
+        <tr>
+          <td>Categories</td>
+          <td>{{ book.getCategories | join(', ') }}</td>
+        </tr>
+        {% endif %}
         <tr>
           <td>Pages</td>
           <td>{{ book.getPageCount }}</td>
@@ -50,6 +50,13 @@
           <td>Language</td>
           <td>{{ book.getLanguage }}</td>
         </tr>
+
+        {% if(book.getListPrice) %}
+        <tr>
+          <td>List price</td>
+          <td>{{ book.getListPrice }} {{ book.getListPriceCurrency }}</td>
+        </tr>
+        {% endif %}
       </table>
     </td>
   </tr>

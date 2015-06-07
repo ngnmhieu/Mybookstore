@@ -53,8 +53,16 @@ main #MainContent {
   margin-top: 10px;
 }
 
+#GBookSearchResult h4 {
+  padding: 0;
+  margin: 5px 5px 5px 0;
+}
+
+.gBookInfoGrid {
+  margin-top: 10px;
+}
 .gBookInfoGrid td {
-  padding: 4px 15px 4px 0;
+  padding: 2px 15px 2px 0;
 }
 .gBookInfoGrid td:first-child {
   font-weight: bold;
