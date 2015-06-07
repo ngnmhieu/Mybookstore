@@ -2,7 +2,7 @@
 namespace Admin;
 
 use Markzero\Mvc\View\TwigView;
-use App\Lib\GoogleBook;
+use App\Lib\GoogleBook\BookRequest;
 use App\Models\Product;
 use App\Models\Category;
 use App\Controllers\ApplicationController;
@@ -55,21 +55,11 @@ class ProductController extends ApplicationController {
 
     if ($keywords) {
 
-      $result = GoogleBook::search($keywords);
+      $book_request = new BookRequest();
+      $books = $book_request->search($keywords); 
 
-      $this->respondTo('html', function() use ($result) {
+      $this->respondTo('html', function() use ($books) {
 
-        $data['count'] = $result->totalItems;
-        $books = [];
-        foreach ($result->items as $item) {
-          $book = [
-            'id' => $item->id,
-            'image' => $item->volumeInfo->imageLinks->smallThumbnail,
-            'title' => $item->volumeInfo->title,
-            'authors' => $item->volumeInfo->authors
-          ];
-          $books[] = $book;
-        }
         $data['books'] = $books;
 
         $this->render(new TwigView('admin/product/import_google.html', $data));
@@ -90,7 +80,8 @@ class ProductController extends ApplicationController {
   public function addFromGoogle() {
     
     $id = $this->getRequest()->getParams()->get('book_id', null);
-    $gbook = new GoogleBook($id);
+    $book_request = new BookRequest();
+    $gbook = $book_request->get($id);
     
     $book = Product::createFromGoogleBook($gbook);
 

@@ -13,8 +13,7 @@
   <tr>
     <th>Action</th>
     <th>Image</th>
-    <th>Title</th>
-    <th>Authors</th>
+    <th>Information</th>
   </tr>
   {% for book in books %}
   <tr>
@@ -24,9 +23,35 @@
         <button type="submit" class="btn btn-default"><span class="fa fa-cloud-download"></span> Save</button>
       </form>
     </td>
-    <td><img src="{{ book.image }}" alt="" /></td>
-    <td>{{ book.title }}</td>
-    <td>{{ book.authors | join(', ') }}</td>
+    <td><img src="{{ book.getThumbnail }}" /></td>
+    <td>
+      <table class="gBookInfoGrid">
+        <tr>
+          <td>Title</td>
+          <td>{{ book.getTitle }}</td>
+        </tr>
+        <tr>
+          <td>Google Book ID</td>
+          <td>{{ book.getId }}</td>
+        </tr>
+        <tr>
+          <td>Authors</td>
+          <td>{{ book.getAuthors | join(', ') }}</td>
+        </tr>
+        <tr>
+          <td>Published</td>
+          <td>{{ book.getPublishedDate | date('Y') }} by {{ book.getPublisher }}</td>
+        </tr>
+        <tr>
+          <td>Pages</td>
+          <td>{{ book.getPageCount }}</td>
+        </tr>
+        <tr>
+          <td>Language</td>
+          <td>{{ book.getLanguage }}</td>
+        </tr>
+      </table>
+    </td>
   </tr>
   {% endfor %}
 </table>

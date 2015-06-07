@@ -2,7 +2,7 @@
 namespace App\Models; 
 
 use Markzero\Mvc\AppModel;
-use App\Lib\GoogleBook;
+use App\Lib\GoogleBook\Book;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Markzero\Validation\Validator\RequireValidator;
 use Markzero\Validation\Validator\FunctionValidator;
@@ -175,26 +175,19 @@ class Product extends AppModel {
 
   /**
    * Create new book with data from GoogleBook
-   * @param App\Lib\GoogleBook
+   * @param App\Lib\GoogleBook\Book
    * @return Product
    */
-  static function createFromGoogleBook(GoogleBook $gbook) {
+  static function createFromGoogleBook(Book $gbook) {
     $em = self::getEntityManager();
     $book = new static();
 
-    $data = $gbook->getData()->volumeInfo;
-
-    $book->name         = $data->title;
-    $barcode = $data->industryIdentifiers[0];
-    $book->barcode      = $barcode->identifier;
-    $book->barcode_type = $barcode->type;
-    $book->description  = $data->description ?: '';
+    $book->name         = $gbook->getTitle();
+    $book->barcode      = $gbook->getIsbn10();
+    $book->barcode_type = 'ISBN10'; 
+    $book->description  = $gbook->getDescription();
     $book->short_desc   = '';
-    $book->price = 0.0;
-
-    if (isset($data->saleInfo)) {
-      $book->price = $data->saleInfo->listPrice->amount;
-    }
+    $book->price        = $gbook->getListPrice();
 
     $em->persist($book);
     $em->flush();
