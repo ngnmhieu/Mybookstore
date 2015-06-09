@@ -14,7 +14,7 @@ class BookCollection implements \IteratorAggregate, \Countable
   /**
    * 
    */
-  public function __construct(array $books_data)
+  public function __construct(array $books_data = array())
   {
     $this->books = array();
 
@@ -36,6 +36,13 @@ class BookCollection implements \IteratorAggregate, \Countable
   public function count()
   {
     return count($this->books);
+  }
+
+  /**
+   * @return bool
+   */
+  public function isEmpty() {
+    return count($this->books) === 0;
   }
 
 }

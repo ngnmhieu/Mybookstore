@@ -1,0 +1,95 @@
+{% include('admin/common/header.html') %}
+
+<div id="GBookSearch">
+  <form action="{{ webpath('Admin\\ProductController#searchGoogleBook') }}" method="get">
+    <h3>Search Google Book</h3>
+    <div class="row">
+      <div class="col-md-6">
+        <input type="text" class="form-control" placeholder="Name, author, publisher, year..." style="" name="keywords" id="keywords" value="{{ params.get('keywords') }}" />
+        <div id="SpecialKeywords">
+
+          <input type="text" class="form-control" placeholder="Title" name="intitle" id="intitle" value="{{ params.get('intitle') }}" />
+          <input type="text" class="form-control" placeholder="Author" name="inauthor" id="inauthor" value="{{ params.get('inauthor') }}" />
+          <input type="text" class="form-control" placeholder="Publisher" name="inpublisher" id="inpublisher" value="{{ params.get('inpublisher') }}" />
+          <input type="text" class="form-control" placeholder="Subject" name="insubject" id="insubject" value="{{ params.get('insubject') }}" />
+          <input type="text" class="form-control" placeholder="ISBN" name="isbn" id="isbn" value="{{ params.get('isbn') }}" />
+        </div>
+      </div>
+      <div class="col-md-6">
+        <select name="language" class="form-control" style="width: 100px">
+          <option value="">Language</option>
+          {% for code, lang in languages %}
+          <option value="{{ code }}" {{ code == params.get('language') ? 'selected' }} >{{ lang }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-primary">Search</button>
+        <a href="{{ webpath('Admin\\ProductController#searchGoogleBook') }}"><button type="button" class="btn btn-default">Reset</button></a>
+      </div>
+    </div>
+  </form>
+</div>
+
+{% if not books.isEmpty %}
+
+<div style="margin-top: 10px">
+  about {{ books_total }} items | Displaying items {{ start_item }} - {{ end_item }}
+  <a href="{{ prev_link }}"><button class="btn btn-default">Prev</button></a>
+  <a href="{{ next_link }}"><button class="btn btn-default">Next</button></a>
+</div>
+
+<table class="table table-striped" id="GBookSearchResult">
+  <tr>
+    <th>Action</th>
+    <th>Image</th>
+    <th>Information</th>
+  </tr>
+  {% for book in books %}
+  <tr>
+    <td>
+      <form action="{{ webpath('Admin\\ProductController#addFromGoogle') }}" method="post">
+        <input type="hidden" name="book_id" id="book_id" value="{{ book.id }}" />
+        <button type="submit" class="btn btn-default"><span class="fa fa-cloud-download"></span> Save</button>
+      </form>
+    </td>
+    <td><a href="{{ book.getInfoLink }}" target="_blank"><img src="{{ book.getThumbnail }}" /></a></td>
+    <td>
+      <h4><a href="{{ book.getInfoLink }}" target="_blank">{{ book.getTitle }}</a></h4>
+      <span>{{ book.getAuthors | join(', ') }}</span>
+      <table class="gBookInfoGrid">
+        <tr>
+          <td>Google Book ID</td>
+          <td>{{ book.getId }}</td>
+        </tr>
+        <tr>
+          <td>Published</td>
+          <td>{{ book.getPublishedDate | date('Y') }} by {{ book.getPublisher }}</td>
+        </tr>
+        {% if(book.getCategories) %}
+        <tr>
+          <td>Categories</td>
+          <td>{{ book.getCategories | join(', ') }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+          <td>Pages</td>
+          <td>{{ book.getPageCount }}</td>
+        </tr>
+        <tr>
+          <td>Language</td>
+          <td>{{ book.getLanguage }}</td>
+        </tr>
+
+        {% if(book.getListPrice) %}
+        <tr>
+          <td>List price</td>
+          <td>{{ book.getListPrice }} {{ book.getListPriceCurrency }}</td>
+        </tr>
+        {% endif %}
+      </table>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
+
+{% include('admin/common/footer.html') %}

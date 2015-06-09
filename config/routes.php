@@ -32,7 +32,7 @@ App::$router->draw(function($r) {
   $r->post('/admin/product/','Admin\ProductController','create');
   $r->post('/admin/product/([0-9]+)','Admin\ProductController','update');
   $r->delete('/admin/product/([0-9]+)/delete','Admin\ProductController','delete');
-  $r->get('/admin/product/googlebook/import','Admin\ProductController','importGoogle');
+  $r->get('/admin/product/googlebook/search','Admin\ProductController','searchGoogleBook');
   $r->post('/admin/product/googlebook/add','Admin\ProductController','addFromGoogle');
 
   /** Admin\Category **/

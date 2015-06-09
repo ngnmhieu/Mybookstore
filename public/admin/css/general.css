@@ -49,6 +49,14 @@ main #MainContent {
 }
 
 /** Google Book **/
+#GBookSearch input[type=text] {
+  margin-bottom: 5px;
+}
+#GBookSearch select {
+  float: left;
+  margin: 0 10px;
+}
+
 #GBookSearchResult {
   margin-top: 10px;
 }

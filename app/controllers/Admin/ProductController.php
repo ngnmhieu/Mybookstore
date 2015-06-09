@@ -3,6 +3,7 @@ namespace Admin;
 
 use Markzero\Mvc\View\TwigView;
 use App\Lib\GoogleBook\BookRequest;
+use App\Lib\GoogleBook\BookRequestParameter;
 use App\Models\Product;
 use App\Models\Category;
 use App\Controllers\ApplicationController;
@@ -47,41 +48,86 @@ class ProductController extends ApplicationController {
     }
   }
 
-  public function importGoogle() {
-
+  public function searchGoogleBook() 
+  {
     $request = $this->getRequest();
+    $params = $request->getParams();
 
-    $keywords = $request->getParams()->get('keywords', null);
+    /** Construct parameters **/
+    $keywords = $params->get('keywords', null);
 
-    if ($keywords) {
+    $special_fields = array(
+      'intitle' => $params->get('intitle', null),
+      'inauthor' => $params->get('inauthor', null),
+      'inpublisher' => $params->get('inpublisher', null),
+      'insubject' => $params->get('insubject', null),
+      'isbn' => $params->get('isbn', null),
+    );
 
-      $book_request = new BookRequest();
-      $books = $book_request->search($keywords); 
+    $language = $params->get('language', null);
 
-      $this->respondTo('html', function() use ($books) {
 
-        $data['books'] = $books;
+    $book_parameter = new BookRequestParameter($keywords, $special_fields, $language);
 
-        $this->render(new TwigView('admin/product/import_google.html', $data));
-      });
+    $this->respondTo('html', function() use ($book_parameter, $params) {
 
-    } else {
+      /** Pagination **/
+      $item_per_page = 20;
 
-      $this->respondTo('html', function() {
+      $page = (int) $params->get('page', 1);
+      $page = $page > 0 ? $page : 1;
 
-        $data['books'] = [];
-        $this->render(new TwigView('admin/product/import_google.html', $data));
+      $total  = BookRequest::getTotal($book_parameter);
+      $offset = ($page-1) * $item_per_page;
 
-      });
-    }
+      $book_parameter->setLimit($item_per_page);
+      $book_parameter->setOffset($offset);
 
+      /** Build links **/
+
+      $build_link = function($params) {
+        $query_parts = array();
+        foreach ($params as $k => $v) {
+          $query_parts[] = urlencode($k).'='.urlencode($v);
+        }
+        return implode('&', $query_parts);
+      };
+
+      $nextpage_params = $params->all();
+      $nextpage_params['page'] = $page + 1;
+
+      $prevpage_params = $params->all();
+      $prevpage_params['page'] = $page > 1 ? $page - 1 : 1;
+
+      $next_link = webpath('Admin\ProductController#searchGoogleBook').'?'.$build_link($nextpage_params);
+      $prev_link = webpath('Admin\ProductController#searchGoogleBook').'?'.$build_link($prevpage_params);
+      
+
+      $data = array(
+        'books_total' => $total,
+        'books'       => BookRequest::search($book_parameter),
+        'start_item'  => $offset,
+        'end_item'    => $offset + $item_per_page,
+        'next_link'   => $next_link,
+        'prev_link'   => $prev_link
+      );
+
+      $data['languages'] = array(
+        'en' => 'English',
+        'de' => 'German',
+        'vn' => 'Vietnamese'
+      );
+
+      $data['params'] = $params;
+
+      $this->render(new TwigView('admin/product/search_google_book.html', $data));
+    });
   }
 
-  public function addFromGoogle() {
-    
+  public function addFromGoogle() 
+  {
     $id = $this->getRequest()->getParams()->get('book_id', null);
-    $book_request = new BookRequest();
-    $gbook = $book_request->get($id);
+    $gbook = BookRequest::get($id);
     
     $book = Product::createFromGoogleBook($gbook);
 
@@ -90,10 +136,12 @@ class ProductController extends ApplicationController {
     });
   }
 
-  public function show($id) {
+  public function show($id) 
+  {
   }
 
-  public function add() {
+  public function add() 
+  {
     $this->respondTo('html', function() {
       $session = $this->getSession();
 
