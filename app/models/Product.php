@@ -272,12 +272,29 @@ class Product extends AppModel {
     $em = self::getEntityManager();
     $book = new static();
 
-    $book->name         = $gbook->getTitle();
-    $book->barcode      = $gbook->getIsbn10();
+    $isbn10 = $gbook->getIsbn10();
+    if ($isbn10) {
+      $isbn10_entity = new Barcode($isbn10, Barcode::ISBN_10, $book);
+      $book->barcodes[] = $isbn10_entity;
+      $em->persist($isbn10_entity);
+    }
+    $isbn13 = $gbook->getIsbn13();
+    if ($isbn13) {
+      $isbn13_entity = new Barcode($isbn13, Barcode::ISBN_13, $book);
+      $book->barcodes[] = $isbn13_entity;
+      $em->persist($isbn13_entity);
+    }
+    $issn = $gbook->getIssn();
+    if ($issn) {
+      $issn_entity = new Barcode($issn, Barcode::ISSN, $book);
+      $book->barcodes[] = $issn_entity;
+      $em->persist($issn_entity);
+    }
 
+    $book->name         = $gbook->getTitle();
     $book->description  = $gbook->getDescription();
     $book->short_desc   = '';
-    $book->price        = $gbook->getListPrice();
+    $book->price        = $gbook->getListPrice() ?: 0.0;
 
     $em->persist($book);
     $em->flush();

@@ -125,11 +125,20 @@ class ProductController extends ApplicationController {
 
     $gbook = BookRequest::get($id);
     
-    $book = Product::createFromGoogleBook($gbook);
+    try {
+      $book = Product::createFromGoogleBook($gbook);
 
-    $this->respondTo('html', function() use($book) {
-      $this->getResponse()->redirect('Admin\ProductController','show', [$book->id]);
-    });
+      $this->respondTo('html', function() use($book) {
+        $this->getResponse()->redirect('Admin\ProductController','show', [$book->id]);
+      });
+
+    } catch(ValidationException $e) {
+
+      $this->respondTo('html', function() use($book) {
+        $this->getResponse()->redirect('Admin\ProductController','searchGoogleBook');
+      });
+
+    }
   }
 
   public function show($id) 

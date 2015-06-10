@@ -2,6 +2,8 @@
 namespace App\Models;
 
 use Markzero\Mvc\AppModel;
+use Markzero\Validation\Validator\RequireValidator;
+use Markzero\Validation\Validator\FunctionValidator;
 
 /**
  * @Entity
@@ -44,5 +46,18 @@ class Barcode extends AppModel
 
   public function _validate()
   { 
+    $vm = self::createValidationManager();
+
+    $vm->validate(function() use ($vm) {
+
+      $vm->register('barcode_type', new FunctionValidator(function() {
+        return in_array($this->type, self::$BARCODE_TYPES); 
+      }), 'Barcode type must be one of those: ', implode(', ', self::$BARCODE_TYPES));
+
+      $vm->register('barcode', new FunctionValidator(function() {
+        return empty(Barcode::findOneBy(['type' => $this->type,'value' => $this->value]));
+      }), 'Duplicated Barcode');
+
+    });
   }
 }
