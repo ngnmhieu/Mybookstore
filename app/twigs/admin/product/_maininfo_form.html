@@ -6,22 +6,18 @@
   </tr>
 
 
-  <tr>
-    <td><label for="barcode">Barcode</label></td>
-    <td><input type="text" name="product[barcode]" value="{{ inputs.get('product[barcode]', product.barcode, true) }}" class="form-control" id="barcode"></td>
+  <tr class="form-group {{ errors.get('product[isbn_10]', null, true) ? 'has-error' : '' }}">
+    <td><label for="isbn_10">ISBN 10</label></td>
+    <td><input type="text" name="product[isbn_10]" value="{{ inputs.get('product[isbn_10]', product.getIsbn10, true) }}" class="form-control" id="isbn_10"></td>
   </tr>
-
-  <tr>
-    <td><label for="barcode_type">Barcode Type</label></td>
-    <td>
-      <select name="product[barcode_type]" id="barcode_type">
-        <option value="ean">EAN</option>
-        <option value="isbn10">ISBN-10</option>
-        <option value="isbn13">ISBN-13</option>
-      </select>
-    </td>
+  <tr class="form-group {{ errors.get('product[isbn_13]', null, true) ? 'has-error' : '' }}">
+    <td><label for="isbn_13">ISBN 13</label></td>
+    <td><input type="text" name="product[isbn_13]" value="{{ inputs.get('product[isbn_13]', product.getIsbn13, true) }}" class="form-control" id="isbn_13"></td>
   </tr>
-
+  <tr class="form-group {{ errors.get('product[issn]', null, true) ? 'has-error' : '' }}">
+    <td><label for="issn">ISSN</label></td>
+    <td><input type="text" name="product[issn]" value="{{ inputs.get('product[issn]', product.getIssn, true) }}" class="form-control" id="issn"></td>
+  </tr>
 
   <tr>
     <td><label for="price">Price</label></td>

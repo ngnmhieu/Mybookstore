@@ -6,24 +6,6 @@
   </tr>
 
 
-  <?php $barcode = isset($product) ? $product->barcode : '' ?>
-  <tr>
-    <td><label for="barcode">Barcode</label></td>
-    <td><input type="text" name="product[barcode]" class="form-control" id="barcode" value="<?=$inputs->get("product[barcode]", $barcode)?>"/></td>
-  </tr>
-
-  <?php $barcode_type = isset($product) ? $product->barcode_type : '' ?>
-  <tr>
-    <td><label for="barcode_type">Barcode Type</label></td>
-    <td>
-      <select name="product[barcode_type]" id="barcode_type">
-        <option value="ean">EAN</option>
-        <option value="isbn10">ISBN-10</option>
-        <option value="isbn13">ISBN-13</option>
-      </select>
-    </td>
-  </tr>
-
 
   <?php $price = isset($product) ? $product->price : '' ?>
   <tr>

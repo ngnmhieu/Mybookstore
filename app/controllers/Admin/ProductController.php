@@ -83,8 +83,7 @@ class ProductController extends ApplicationController {
       $book_parameter->setLimit($item_per_page);
       $book_parameter->setOffset($offset);
 
-      /** Build links **/
-
+      /** Build Next/Prev links **/
       $build_link = function($params) {
         $query_parts = array();
         foreach ($params as $k => $v) {
@@ -112,11 +111,7 @@ class ProductController extends ApplicationController {
         'prev_link'   => $prev_link
       );
 
-      $data['languages'] = array(
-        'en' => 'English',
-        'de' => 'German',
-        'vn' => 'Vietnamese'
-      );
+      $data['languages'] = BookRequest::getAvailableLanguages();
 
       $data['params'] = $params;
 
@@ -127,6 +122,7 @@ class ProductController extends ApplicationController {
   public function addFromGoogle() 
   {
     $id = $this->getRequest()->getParams()->get('book_id', null);
+
     $gbook = BookRequest::get($id);
     
     $book = Product::createFromGoogleBook($gbook);

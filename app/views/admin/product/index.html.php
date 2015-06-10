@@ -23,8 +23,6 @@
         <td><a href="<?=webpath('Admin\ProductController#edit', [$product->id])?>"><span class="fa fa-pencil fa-lg"></span></a></td>
         <td><?=$product->id?></td>
         <td><?=$product->name?></td>
-        <td><?=$product->barcode?></td>
-        <td><?=$product->barcode_type?></td>
         <td><?=$product->price?></td>
       </tr>
       <?php }?>

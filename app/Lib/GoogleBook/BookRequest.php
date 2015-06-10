@@ -11,7 +11,20 @@ use Markzero\Http\Response;
 class BookRequest 
 {
 
+  /**
+   * API Endpoint
+   */
   const VOLUME_URI = 'https://www.googleapis.com/books/v1/volumes/';
+
+  private static $AVAILABLE_LANGUAGES = array(
+    'en' => 'English',
+    'de' => 'German',
+    'vi' => 'Vietnamese'
+  );
+
+  public static function getAvailableLanguages() {
+    return self::$AVAILABLE_LANGUAGES;
+  }
 
   private static function getHttpClient() 
   {
