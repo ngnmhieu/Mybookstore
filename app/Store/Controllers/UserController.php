@@ -27,7 +27,7 @@ class UserController extends ApplicationController {
     } catch(ValidationException $e) {
 
       $this->respondTo('html', function() use($e) {
-        $this->getResponse()->redirect('user','register');
+        $this->getResponse()->redirect('App\Store\Controllers\UserController','register');
       });
 
     }

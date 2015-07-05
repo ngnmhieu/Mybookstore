@@ -1,4 +1,6 @@
 <?php
+namespace App\Auth\Controllers;
+
 use App\Models\UserSession; 
 use Markzero\Mvc\View;
 use App\Controllers\ApplicationController;
@@ -19,26 +21,26 @@ class SessionController extends ApplicationController {
       UserSession::create($this->getRequest()->request);
 
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('ProductController', 'index');
+        $this->getResponse()->redirect('App\Store\Controllers\ProductController', 'index');
       });
 
     } catch(ValidationException $e) {
       // Validation failed
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('SessionController', 'signIn');
+        $this->getResponse()->redirect('App\Auth\Controllers\SessionController', 'signIn');
       });
 
     } catch(ResourceNotFoundException $e) {
       // User not found
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('SessionController', 'signIn');
+        $this->getResponse()->redirect('App\Auth\Controllers\SessionController', 'signIn');
       });
 
     } catch(AuthenticationFailedException $e) {
 
       // User authentication failed
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('SessionController', 'signIn');
+        $this->getResponse()->redirect('App\Auth\Controllers\SessionController', 'signIn');
       });
     }
     
@@ -48,7 +50,7 @@ class SessionController extends ApplicationController {
     UserSession::delete();
 
     $this->respondTo('html', function() {
-      $this->getResponse()->redirect('ProductController', 'index');
+      $this->getResponse()->redirect('App\Store\Controllers\ProductController', 'index');
     });
   }
 }

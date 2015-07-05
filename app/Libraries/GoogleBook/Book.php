@@ -1,5 +1,5 @@
 <?php
-namespace App\Lib\GoogleBook;
+namespace App\Libraries\GoogleBook;
 
 use Markzero\Http\Response;
 

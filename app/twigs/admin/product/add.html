@@ -2,15 +2,15 @@
 
 <div id="ProductForm">
 
-  <a class="btn btn-default" href="{{ webpath('Admin\\ProductController#index') }}"><span class="fa fa-reply"></span> Return</a>
+  <a class="btn btn-default" href="{{ webpath('Admin::ProductController','index') }}"><span class="fa fa-reply"></span> Return</a>
   <h3>Create Product</h3>
 
-  <form action="{{ webpath('Admin\\ProductController#create') }}" method="post">
+  <form action="{{ webpath('Admin::ProductController','create') }}" method="post">
     
     <div role="tabpanel">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#maininfo" aria-controls="maininfo" role="tab" data-toggle="tab">Product Information</a></li>
+        <li role="presentation" class="active"><a href="','maininfo" aria-controls="maininfo" role="tab" data-toggle="tab">Product Information</a></li>
       </ul>
 
       <!-- Tab panes -->

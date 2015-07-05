@@ -1,5 +1,5 @@
 <?php
-namespace App\Lib\GoogleBook;
+namespace App\Libraries\GoogleBook;
 
 /**
  * Represent a collection of Google Book volumes

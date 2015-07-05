@@ -16,7 +16,7 @@
           <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-              <a class="navbar-brand" href="{{ webpath('ProductController#index') }}">Bookstore</a>
+              <a class="navbar-brand" href="{{ webpath('Store::ProductController','index') }}">Bookstore</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -30,14 +30,14 @@
                 <ul class="dropdown-menu" role="menu">
                   <li><a href="#">Profile</a></li>
                   <li class="divider"></li>
-                  <li><a href="{{ webpath('SessionController#delete') }}">Sign out</a></li>
+                  <li><a href="{{ webpath('Auth::SessionController','delete') }}">Sign out</a></li>
                 </ul>
                 </li>
 
                 {% else %}
 
-                <li><a href="{{ webpath('UserController#register') }}">Register</a></li>
-                <li><a href="{{ webpath('SessionController#signIn') }}">Sign In</a></li>
+                <li><a href="{{ webpath('Store::UserController','register') }}">Register</a></li>
+                <li><a href="{{ webpath('Auth::SessionController','signIn') }}">Sign In</a></li>
 
                 {% endif %}
               </ul>

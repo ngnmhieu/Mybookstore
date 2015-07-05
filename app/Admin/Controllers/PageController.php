@@ -1,5 +1,5 @@
 <?php
-namespace Admin;
+namespace App\Admin\Controllers;
 
 use Markzero\Mvc\View\HtmlView;
 use Markzero\Mvc\View\TwigView;
@@ -11,7 +11,8 @@ use Markzero\Validation\Exception\ValidationException;
 
 class PageController extends ApplicationController {
 
-  public function index() {
+  public function index() 
+  {
     $this->respondTo('html', function() {
       $this->render(new TwigView('admin/index.html'));
     });

@@ -1,5 +1,5 @@
 <?php
-namespace Admin;
+namespace App\Admin\Controllers;
 
 use App\Controllers\ApplicationController;
 use App\Models\Category;
@@ -10,7 +10,8 @@ use Markzero\Http\Exception\ResourceNotFoundException;
 
 class CategoryController extends ApplicationController {
 
-  function index() {
+  function index() 
+  {
     $categories = Category::findAll();
 
     $this->respondTo('html', function() use($categories) {
@@ -19,7 +20,8 @@ class CategoryController extends ApplicationController {
     });
   }
 
-  function show($id) {
+  function show($id) 
+  {
     $category = Category::find($id);
     $products = $category->products;
     $this->respondTo('html', function() use($category, $products) {
@@ -29,24 +31,31 @@ class CategoryController extends ApplicationController {
     });
   }
 
-  function add() {
+  function add() 
+  {
     $this->respondTo('html', function() {
       $this->render(new TwigView('admin/category/add.html'));
     });
   }
 
-  function edit() {
-    // $this->respondTo('html', function() {
-      // $this->render(new TwigView('admin/category/add.html'));
-    // });
+  function edit() 
+  {
+    $this->respondTo('html', function() {
+      $this->render(new TwigView('admin/category/add.html'));
+    });
   }
 
-  function create() {
+  function create() 
+  {
     try {
       $cat = Category::create($this->getRequest()->getParams());
 
       $this->respondTo('json', function() {
         $this->getResponse()->setStatusCode(Response::HTTP_OK, 'Category Created');
+      });
+
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('App\Admin\Controllers\CategoryController', 'index');
       });
 
     } catch(ValidationException $e) {
@@ -59,7 +68,8 @@ class CategoryController extends ApplicationController {
     }
   }
 
-  function update($id) {
+  function update($id) 
+  {
     try {
       $cat = Category::update($id, $this->getRequest()->getParams());
 
@@ -84,7 +94,16 @@ class CategoryController extends ApplicationController {
       $this->respondTo('json', function() {
         $this->getResponse()->setStatusCode(Response::HTTP_OK, 'Category Deleted');
       });
+
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('App\Admin\Controllers\CategoryController', 'index');
+      });
+
     } catch (\Exception $e) {
+
+      $this->respondTo('html', function() {
+        $this->getResponse()->redirect('App\Admin\Controllers\CategoryController', 'index');
+      });
 
       $this->respondTo('json', function() use($e) {
         $this->getResponse()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Category could not be deleted, error occurred: '.$e->getMessage());

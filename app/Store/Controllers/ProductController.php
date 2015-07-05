@@ -1,7 +1,10 @@
 <?php
+namespace App\Store\Controllers;
 
 use App\Models\Product; 
+use App\Models\Rating; 
 use App\Models\UserSession; 
+use App\Models\User;
 use App\Controllers\ApplicationController;
 use Markzero\Mvc\View\TwigView;
 use Markzero\Mvc\View\JsonView;
@@ -18,7 +21,7 @@ class ProductController extends ApplicationController {
 
     $signed_in = UserSession::isSignedIn();
     $replacements['is_signed_in'] = $signed_in;
-    $replacements['user'] = $signed_in ?  UserSession::getUser() : new \User(); 
+    $replacements['user'] = $signed_in ?  UserSession::getUser() : new User(); 
 
     return $replacements;
   }
@@ -73,7 +76,7 @@ class ProductController extends ApplicationController {
     } catch(ResourceNotFoundException $e) {
 
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('ProductController','index');
+        $this->getResponse()->redirect('App\Store\Controllers\ProductController','index');
       });
 
     }

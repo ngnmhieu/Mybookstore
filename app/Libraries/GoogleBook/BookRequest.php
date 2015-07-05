@@ -1,5 +1,6 @@
 <?php
-namespace App\Lib\GoogleBook;
+namespace App\Libraries\GoogleBook;
+
 use GuzzleHttp\Exception\GuzzleException;
 use Markzero\Http\Response;
 

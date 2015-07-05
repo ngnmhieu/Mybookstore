@@ -1,10 +1,10 @@
 {% include('admin/common/header.html') %}
 
     <div id="ProductControls">
-      <a href="{{ webpath('Admin\\ProductController#add') }}">
+      <a href="{{ webpath('Admin::ProductController','add') }}">
         <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Product</button>
       </a>
-      <a href="{{ webpath('Admin\\ProductController#searchGoogleBook') }}">
+      <a href="{{ webpath('Admin::ProductController','searchGoogleBook') }}">
         <button type="button" class="btn btn-default"><span class="fa fa-cloud "></span> Import</button>
       </a>
       <div class="clear"></div>
@@ -21,7 +21,7 @@
 
       {% for product in products %}
       <tr>
-        <td><a href="{{ webpath('Admin\\ProductController#edit', [product.id]) }}"><span class="fa fa-pencil fa-lg"></span></a></td>
+        <td><a href="{{ webpath('Admin::ProductController','edit', [product.id]) }}"><span class="fa fa-pencil fa-lg"></span></a></td>
         <td>{{ product.id }}</td>
         <td>{{ product.name }}</td>
         <td>{{ product.price }}</td>

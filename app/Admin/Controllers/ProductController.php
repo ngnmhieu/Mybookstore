@@ -1,9 +1,9 @@
 <?php
-namespace Admin;
+namespace App\Admin\Controllers;
 
 use Markzero\Mvc\View\TwigView;
-use App\Lib\GoogleBook\BookRequest;
-use App\Lib\GoogleBook\BookRequestParameter;
+use App\Libraries\GoogleBook\BookRequest;
+use App\Libraries\GoogleBook\BookRequestParameter;
 use App\Models\Product;
 use App\Models\Category;
 use App\Controllers\ApplicationController;
@@ -12,9 +12,11 @@ use Markzero\Auth\Exception\ActionNotAuthorizedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class ProductController extends ApplicationController {
+class ProductController extends ApplicationController 
+{
 
-  public function index() {
+  public function index()
+  {
     $products = Product::findAll();
 
     $this->respondTo('html', function() use($products) {
@@ -22,7 +24,8 @@ class ProductController extends ApplicationController {
     });
   }
 
-  public function create() {
+  public function create() 
+  {
     $request = $this->getRequest();
     $response = $this->getResponse();
 
@@ -31,7 +34,7 @@ class ProductController extends ApplicationController {
       $product = Product::create($request->getParams());
 
       $this->respondTo('html', function() use($response) {
-        $response->redirect('Admin\ProductController', 'index');
+        $response->redirect('App\Admin\Controllers\ProductController', 'index');
       });
 
     } catch(ValidationException $e) {
@@ -42,7 +45,7 @@ class ProductController extends ApplicationController {
       $flash->set('inputs', $request->getParams()->all());
 
       $this->respondTo('html', function() use($response) {
-        $response->redirect('Admin\ProductController', 'add');
+        $response->redirect('App\Admin\Controllers\ProductController', 'add');
       });
 
     }
@@ -98,8 +101,8 @@ class ProductController extends ApplicationController {
       $prevpage_params = $params->all();
       $prevpage_params['page'] = $page > 1 ? $page - 1 : 1;
 
-      $next_link = webpath('Admin\ProductController#searchGoogleBook').'?'.$build_link($nextpage_params);
-      $prev_link = webpath('Admin\ProductController#searchGoogleBook').'?'.$build_link($prevpage_params);
+      $next_link = webpath('Admin::ProductController','searchGoogleBook').'?'.$build_link($nextpage_params);
+      $prev_link = webpath('Admin::ProductController','searchGoogleBook').'?'.$build_link($prevpage_params);
       
 
       $data = array(
@@ -119,23 +122,57 @@ class ProductController extends ApplicationController {
     });
   }
 
-  public function addFromGoogle() 
+  public function addFromGoogle($id) 
+  {
+    $this->respondTo('html', function() use ($id) {
+      $response = $this->getResponse();
+      $session  = $this->getSession();
+
+      try {
+        $gbook = BookRequest::get($id);
+
+        $duplicate = Product::getDuplicateProduct([$gbook->getIsbn10(), $gbook->getIsbn13(), $gbook->getIssn()]);
+        if ($duplicate) {
+          // $response->redirect('');
+          return $this;
+        }
+
+        $product = Product::newFromGoogleBook($gbook);
+
+        $categories = Category::findAll();
+        $inputs = $session->getOldInputBag();
+        $errors = $session->getErrorBag();
+        
+        $this->render(new TwigView('admin/product/add.html', compact('product', 'inputs', 'categories', 'errors')));
+    
+      } catch (\RuntimeException $e) {
+        $flash_bag = $session->getFlashBag();
+        $flash_bag->set('errors', [$e->getMessage()]);
+
+        $response->redirect('App\Admin\Controllers\ProductController','searchGoogleBook');
+      }
+
+    });
+
+  }
+
+  public function saveFromGoogle()
   {
     $id = $this->getRequest()->getParams()->get('book_id', null);
 
     $gbook = BookRequest::get($id);
-    
+
     try {
       $book = Product::createFromGoogleBook($gbook);
 
       $this->respondTo('html', function() use($book) {
-        $this->getResponse()->redirect('Admin\ProductController','show', [$book->id]);
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController','show', [$book->id]);
       });
 
     } catch(ValidationException $e) {
 
       $this->respondTo('html', function() use($book) {
-        $this->getResponse()->redirect('Admin\ProductController','searchGoogleBook');
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController','searchGoogleBook');
       });
 
     }
@@ -161,7 +198,8 @@ class ProductController extends ApplicationController {
 
   }
 
-  public function edit($id) {
+  public function edit($id) 
+  {
     try {
       $product = Product::find($id);
 
@@ -178,14 +216,15 @@ class ProductController extends ApplicationController {
     } catch(ResourceNotFoundException $e) {
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('Admin\ProductController', 'index');
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
       });
 
     }
     
   }
 
-  public function update($id) {
+  public function update($id) 
+  {
 
     $flash = $this->getSession()->getFlashBag();
     $request = $this->getRequest();
@@ -195,7 +234,7 @@ class ProductController extends ApplicationController {
       $product = Product::update($id, $request->getParams());
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('Admin\ProductController', 'edit', array($id));
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', array($id));
       });
 
     } catch(ResourceNotFoundException $e) {
@@ -203,7 +242,7 @@ class ProductController extends ApplicationController {
       $flash->set('inputs', $request->getParams()->all());
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('Admin\ProductController', 'edit', array($id));
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', array($id));
       });
 
     } catch(ValidationException $e) {
@@ -212,28 +251,29 @@ class ProductController extends ApplicationController {
       $flash->set('inputs', $request->getParams()->all());
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('Admin\ProductController', 'edit', array($id));
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', array($id));
       });
 
     }
   }
 
-  function delete($id) {
+  function delete($id) 
+  {
     try {
       Product::delete($id);
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('Admin\ProductController', 'index');
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
       });
 
     } catch(ResourceNotFoundException $e) {
       
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('Admin\ProductController', 'index');
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
       });
 
     } catch(\Exception $e) {
       $this->respondTo('html', function() {
-        $this->getResponse()->redirect('Admin\ProductController', 'index');
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
       });
     }
   }

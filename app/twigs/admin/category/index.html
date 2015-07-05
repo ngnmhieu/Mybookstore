@@ -1,7 +1,7 @@
 {% include('admin/common/header.html') %}
 
     <div id="ProductControls">
-      <a href="{{ webpath('Admin\\CategoryController#add') }}">
+      <a href="{{ webpath('Admin::CategoryController','add') }}">
         <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Category</button>
       </a>
       <div class="clear"></div>
@@ -10,9 +10,9 @@
     <ul>
       {% for cat in categories %}
       <li>
-        <a href="{{ webpath('Admin\\CategoryController#show', [cat.id]) }}">{{ cat.name }}</a>
-        [<a href="{{ webpath('Admin\\CategoryController#edit', [cat.id]) }}">edit</a>] 
-        [<a href="{{ webpath('Admin\\CategoryController#delete', [cat.id]) }}">delete</a>]
+        <a href="{{ webpath('Admin::CategoryController','show', [cat.id]) }}">{{ cat.name }}</a>
+        [<a href="{{ webpath('Admin::CategoryController','edit', [cat.id]) }}">edit</a>] 
+        [<a href="{{ webpath('Admin::CategoryController','delete', [cat.id]) }}">delete</a>]
       </li>
       {% endfor %}
     </ul>

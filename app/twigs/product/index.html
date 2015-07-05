@@ -8,7 +8,7 @@
   <div class="row" id="ProductList">
       {% for product in products %}
       <div class="col-xs-2">
-      <a href="{{ webpath('ProductController#show', [product.id]) }}">{{ product.name }}</a> {{product.price}} &euro;
+      <a href="{{ webpath('Store::ProductController','show', [product.id]) }}">{{ product.name }}</a> {{product.price}} &euro;
       </div>
       {% endfor %}
   </div>
