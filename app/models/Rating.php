@@ -10,7 +10,8 @@ use Markzero\Http\Exception\DuplicateResourceException;
  * @Entity
  * @Table(name="ratings")
  */
-class Rating extends AppModel {
+class Rating extends AppModel 
+{
   protected static $readable = array('id');
   protected static $accessible = array('value', 'user', 'product');
 

@@ -8,15 +8,21 @@ use Markzero\Http\Response;
 use Markzero\Validation\Exception\ValidationException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 
-class CategoryController extends ApplicationController {
+class CategoryController extends ApplicationController 
+{
 
   function index() 
   {
-    $categories = Category::findAll();
+    $this->respondTo('html', function() {
 
-    $this->respondTo('html', function() use($categories) {
+      $flash      = $this->getSession()->getFlashBag();
+      $categories = Category::findAll();
+
       $data['categories'] = $categories;
+      $data['errors']     = $flash->get('errors');
+
       $this->render(new TwigView('admin/category/index.html', $data));
+
     });
   }
 
@@ -34,81 +40,102 @@ class CategoryController extends ApplicationController {
   function add() 
   {
     $this->respondTo('html', function() {
-      $this->render(new TwigView('admin/category/add.html'));
+    
+      $session  = $this->getSession();
+      $category = new Category();
+      $inputs   = $session->getOldInputBag();
+      $errors   = $session->getErrorBag();
+
+      $this->render(new TwigView('admin/category/add.html', compact('category', 'inputs', 'errors')));
     });
   }
 
-  function edit() 
+  function edit($id) 
   {
-    $this->respondTo('html', function() {
-      $this->render(new TwigView('admin/category/add.html'));
+    $this->respondTo('html', function() use($id) {
+
+      $category = Category::find($id);
+      $session  = $this->getSession();
+      $inputs   = $session->getOldInputBag();
+      $errors   = $session->getErrorBag();
+
+      $this->render(new TwigView('admin/category/edit.html', compact('category', 'inputs', 'errors')));
     });
   }
 
   function create() 
   {
-    try {
-      $cat = Category::create($this->getRequest()->getParams());
+    $this->respondTo('html', function() {
 
-      $this->respondTo('json', function() {
-        $this->getResponse()->setStatusCode(Response::HTTP_OK, 'Category Created');
-      });
+      $request  = $this->getRequest();
+      $response = $this->getResponse();
 
-      $this->respondTo('html', function() {
-        $this->getResponse()->redirect('App\Admin\Controllers\CategoryController', 'index');
-      });
+      try {
 
-    } catch(ValidationException $e) {
+        Category::create($request->getParams());
+        $response->redirect('App\Admin\Controllers\CategoryController', 'index');
 
-      $this->respondTo('json', function() use($e) {
-        $this->getResponse()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-        $this->render(new JsonView($e->getErrors()));
-      });
+      } catch(ValidationException $e) {
 
-    }
+        $flash = $this->getSession()->getFlashBag();
+        $flash->set('inputs', $request->getParams()->all());
+        $flash->set('errors', $e->getErrors());
+
+        $response->redirect('App\Admin\Controllers\CategoryController', 'add');
+
+      }
+    });
   }
 
   function update($id) 
   {
-    try {
-      $cat = Category::update($id, $this->getRequest()->getParams());
+    $this->respondTo('html', function() use($id) {
 
-      $this->respondTo('json', function() {
-        $this->getResponse()->setStatusCode(Response::HTTP_OK, 'Category Updated');
-      });
+      $response = $this->getResponse();
+      $request  = $this->getRequest();
 
-    } catch(ValidationException $e) {
+      try {
+        Category::update($id, $this->getRequest()->getParams());
 
-      $this->respondTo('json', function() use($e) {
-        $this->getResponse()->setStatusCode(Response::HTTP_BAD_REQUEST, 'Bad Request (Validation Error)');
-        $this->render(new JsonView($e->getErrors()));
-      });
+        $response->redirect('App\Admin\Controllers\CategoryController', 'index');
 
-    }
-  }
+      } catch(ValidationException $e) {
 
-  function delete($id) {
-    try {
-      Category::delete($id);
+        $flash = $this->getSession()->getFlashBag();
+        $flash->set('errors', $e->getErrors());
+        $flash->set('inputs', $request->getParams()->all());
 
-      $this->respondTo('json', function() {
-        $this->getResponse()->setStatusCode(Response::HTTP_OK, 'Category Deleted');
-      });
+        $response->redirect('App\Admin\Controllers\CategoryController', 'edit', [$id]);
 
-      $this->respondTo('html', function() {
-        $this->getResponse()->redirect('App\Admin\Controllers\CategoryController', 'index');
-      });
+      }
 
-    } catch (\Exception $e) {
+    });
+  } 
 
-      $this->respondTo('html', function() {
-        $this->getResponse()->redirect('App\Admin\Controllers\CategoryController', 'index');
-      });
+  function delete($id) 
+  {
 
-      $this->respondTo('json', function() use($e) {
-        $this->getResponse()->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR, 'Category could not be deleted, error occurred: '.$e->getMessage());
-      });
-    }
+    $this->respondTo('html', function() use($id) {
 
+      $response = $this->getResponse();
+      $flash    = $this->getSession()->getFlashBag();
+
+      try {
+
+        Category::delete($id);
+        $response->redirect('App\Admin\Controllers\CategoryController', 'index');
+
+      } catch (ResourceNotFoundException $e) {
+
+        $flash->add('errors', "Cannot find Category #$id");
+        $response->redirect('App\Admin\Controllers\CategoryController', 'index');
+
+      } catch (\Exception $e) {
+
+        $flash->add('errors', 'Cannot delete Category #'.$id.' ('.$e->getMessage().')');
+        $response->redirect('App\Admin\Controllers\CategoryController', 'index');
+      }
+
+    });
   }
 }

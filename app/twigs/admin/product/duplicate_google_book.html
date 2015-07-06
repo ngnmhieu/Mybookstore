@@ -1,0 +1,18 @@
+{% include('admin/common/header.html') %}
+
+<h4>Notice: The current volume probably already exists in the system.</h4>
+
+<p>
+  <b>Product Info</b>
+  <ul style="list-style: square">
+    <li><b>Name:</b> {{ product.name }}</li>
+    <li><b>ISBN 10:</b> {{ product.isbn10 }}</li>
+    <li><b>ISBN 13:</b> {{ product.isbn13 }}</li>
+  </ul>
+</p>
+
+<a href="#">Click Here to merge volume information</a>
+|
+<a href="#" onclick="history.back();">Go back to search</a>
+
+{% include('admin/common/footer.html') %}

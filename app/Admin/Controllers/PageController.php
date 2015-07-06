@@ -9,7 +9,8 @@ use Markzero\Auth\Exception\ActionNotAuthorizedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class PageController extends ApplicationController {
+class PageController extends ApplicationController 
+{
 
   public function index() 
   {

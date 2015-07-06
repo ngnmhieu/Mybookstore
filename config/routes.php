@@ -34,12 +34,22 @@ $r->delete('/admin/product/([0-9]+)/delete','App\Admin\Controllers\ProductContro
 $r->get('/admin/product/googlebook/search','App\Admin\Controllers\ProductController','searchGoogleBook');
 $r->get('/admin/product/googlebook/(.+)/add','App\Admin\Controllers\ProductController','addFromGoogle');
 
+/** Admin\Author **/
+$r->get('/admin/author/','App\Admin\Controllers\AuthorController','index');
+$r->get('/admin/author/([0-9]+)','App\Admin\Controllers\AuthorController','show');
+$r->get('/admin/author/([0-9]+)/edit','App\Admin\Controllers\AuthorController','edit');
+$r->get('/admin/author/add','App\Admin\Controllers\AuthorController','add');
+$r->post('/admin/author/','App\Admin\Controllers\AuthorController','create');
+$r->post('/admin/author/([0-9]+)','App\Admin\Controllers\AuthorController','update');
+$r->get('/admin/author/([0-9]+)/delete','App\Admin\Controllers\AuthorController','delete');
+
 /** Admin\Category **/
 $r->get('/admin/category/','App\Admin\Controllers\CategoryController','index');
 $r->get('/admin/category/([0-9]+)','App\Admin\Controllers\CategoryController','show');
 $r->get('/admin/category/([0-9]+)/edit','App\Admin\Controllers\CategoryController','edit');
 $r->get('/admin/category/add','App\Admin\Controllers\CategoryController','add');
 $r->post('/admin/category/','App\Admin\Controllers\CategoryController','create');
+$r->post('/admin/category/([0-9]+)','App\Admin\Controllers\CategoryController','update');
 $r->get('/admin/category/([0-9]+)/delete','App\Admin\Controllers\CategoryController','delete');
 
 /** User **/

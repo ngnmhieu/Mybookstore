@@ -2,10 +2,10 @@
 namespace App\Models; 
 
 use Markzero\Mvc\AppModel;
-use App\Lib\GoogleBook\Book;
+use App\Libraries\GoogleBook\Book;
 use Doctrine\Common\Collections\Criteria;
-use \Symfony\Component\HttpFoundation\ParameterBag;
-use \Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Doctrine\Common\Collections\ArrayCollection;
 use Markzero\Validation\Validator\RequireValidator;
 use Markzero\Validation\Validator\FunctionValidator;
 use Markzero\Validation\Exception\ValidationException;
@@ -15,20 +15,23 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  * @Entity 
  * @Table(name="products")
  **/
-class Product extends AppModel {
-
+class Product extends AppModel 
+{
   protected static $readable = array('id');
-  protected static $accessible = array('name', 'price', 'short_desc', 'description', 'ratings', 'category', 'barcodes');
+  protected static $accessible = array('name', 'price', 'short_desc', 'description', 'ratings', 'category', 'barcodes', 'authors');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
+
   /** @Column(type="string") **/
   protected $name;
 
   /** @Column(type="float") **/
   protected $price;
+
   /** @Column(type="text") **/
   protected $short_desc;
+
   /** @Column(type="text") **/
   protected $description;
 
@@ -36,20 +39,29 @@ class Product extends AppModel {
    * @OneToMany(targetEntity="Rating", mappedBy="product")
    */
   protected $ratings;
+
   /**
    * @ManyToMany(targetEntity="User", mappedBy="products")
    */
   protected $users;
+
   /**
    * @ManyToOne(targetEntity="Category", inversedBy="products")
    */
   protected $category;
+
   /**
    * @OneToMany(targetEntity="Barcode", mappedBy="product", cascade={"persist"})
    */
   protected $barcodes;
 
-  public function __construct() {
+  /**
+   * @ManyToMany(targetEntity="Author", mappedBy="books")
+   */
+  protected $authors;
+
+  public function __construct() 
+  {
     $this->ratings = new ArrayCollection();
     $this->barcodes = new ArrayCollection();
   }
@@ -240,7 +252,7 @@ class Product extends AppModel {
    * @throw Markzero\Http\Exception\ResourceNotFoundException
    *        Exception
    */
-  static function delete($id) {
+  public static function delete($id) {
     $product = Product::find($id);
     if ($product === null) {
       throw new ResourceNotFoundException();
@@ -298,7 +310,7 @@ class Product extends AppModel {
 
   /**
    * Create new book with data from GoogleBook
-   * @param App\Lib\GoogleBook\Book
+   * @param App\Library\GoogleBook\Book
    * @return Product
    */
   static function createFromGoogleBook(Book $gbook) 

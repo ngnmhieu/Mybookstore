@@ -8,16 +8,20 @@ use Markzero\Validation\Validator;
  * @Entity
  * @Table(name="users")
  */
-class User extends AppModel {
+class User extends AppModel 
+{
   protected static $readable = array('id');
   protected static $accessible = array('email', 'name', 'password_hash', 'ratings');
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
+
   /** @Column(type="string") **/
   protected $email;
+
   /** @Column(type="string") **/
   protected $name;
+
   /** @Column(type="string") **/
   protected $password_hash;
   /**
@@ -30,7 +34,8 @@ class User extends AppModel {
    */
   protected $products;
 
-  protected function _validate() {
+  protected function _validate() 
+  {
     $vm = self::createValidationManager();
 
     $vm->register('name', new Validator\FunctionValidator(function($name) {
@@ -55,8 +60,8 @@ class User extends AppModel {
     $em = self::getEntityManager();
 
     $obj = new static();
-    $obj->name   = $params->get('name');
-    $obj->email   = $params->get('email');
+    $obj->name  = $params->get('name');
+    $obj->email = $params->get('email');
 
     // validate
     $obj->_validate();

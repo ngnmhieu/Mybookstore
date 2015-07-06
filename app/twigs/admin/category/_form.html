@@ -1,0 +1,18 @@
+
+<table class="table table-bordered form-group" style='width: 50%'>
+  <tr class="{{ errors.get('name') ? 'has-error' : '' }}">
+    <td style="vertical-align: middle"><label for="name">Name</label></td>
+    <td><input type="text" class="form-control" name="name" id="name" value="{{ inputs.get('name', category.name) }}" data-toggle="tooltip" data-placement="right" title="{{ errors.get('name') }}"/></td>
+  </td>
+  <tr>
+    <td colspan=2 style='text-align: right'><input type="submit" class="btn btn-primary" name="submit" value="Save"></td>
+  </tr>
+</table>
+
+{% if errors.count != 0 %}
+  <script type="text/javascript" charset="utf-8">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    })
+  </script>
+{% endif %}

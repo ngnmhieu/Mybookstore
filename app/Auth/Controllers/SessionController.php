@@ -8,15 +8,18 @@ use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class SessionController extends ApplicationController {
+class SessionController extends ApplicationController 
+{
 
-  function signIn() {
+  function signIn() 
+  {
     $this->respondTo('html', function() {
       $this->render(new View\TwigView('session/sign_in.html'));
     });
   }
 
-  function create() {
+  function create() 
+  {
     try {
       UserSession::create($this->getRequest()->request);
 
@@ -25,6 +28,7 @@ class SessionController extends ApplicationController {
       });
 
     } catch(ValidationException $e) {
+
       // Validation failed
       $this->respondTo('html', function() {
         $this->getResponse()->redirect('App\Auth\Controllers\SessionController', 'signIn');
@@ -46,7 +50,8 @@ class SessionController extends ApplicationController {
     
   }
 
-  function delete() {
+  function delete() 
+  {
     UserSession::delete();
 
     $this->respondTo('html', function() {

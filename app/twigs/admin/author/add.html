@@ -1,11 +1,11 @@
 {% include('admin/common/header.html') %}
 
-<div id="CategoryForm">
+<div id="AuthorForm">
 
   <a class="btn btn-default" onclick='history.back(); return false;'><span class="fa fa-reply"></span> Return</a>
-  <h3>Create Category</h3>
+  <h3>Create Author</h3>
 
-  <form action="{{ webpath('Admin::CategoryController','create') }}" method="post">
+  <form action="{{ webpath('Admin::AuthorController','create') }}" method="post" class="">
 
     {% include('admin/author/_form.html') %}
 

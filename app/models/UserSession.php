@@ -7,7 +7,8 @@ use Markzero\Validation\Validator;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 
-class UserSession extends AppModel {
+class UserSession extends AppModel 
+{
 
   protected function _validate() { }
 

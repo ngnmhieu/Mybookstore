@@ -14,13 +14,18 @@ use Markzero\Validation\Exception\ValidationException;
 
 class ProductController extends ApplicationController 
 {
-
   public function index()
   {
     $products = Product::findAll();
 
     $this->respondTo('html', function() use($products) {
-      $this->render(new TwigView('admin/product/index.html', compact('products')));
+
+      $data = [
+        'page_title' => 'Admin Panel - Product List',
+        'products'   => $products
+      ];
+
+      $this->render(new TwigView('admin/product/index.html', $data));
     });
   }
 
@@ -69,7 +74,6 @@ class ProductController extends ApplicationController
 
     $language = $params->get('language', null);
 
-
     $book_parameter = new BookRequestParameter($keywords, $special_fields, $language);
 
     $this->respondTo('html', function() use ($book_parameter, $params) {
@@ -104,6 +108,7 @@ class ProductController extends ApplicationController
       $next_link = webpath('Admin::ProductController','searchGoogleBook').'?'.$build_link($nextpage_params);
       $prev_link = webpath('Admin::ProductController','searchGoogleBook').'?'.$build_link($prevpage_params);
       
+      $keywords  = $params->get('keywords', null);
 
       $data = array(
         'books_total' => $total,
@@ -111,7 +116,8 @@ class ProductController extends ApplicationController
         'start_item'  => $offset,
         'end_item'    => $offset + $item_per_page,
         'next_link'   => $next_link,
-        'prev_link'   => $prev_link
+        'prev_link'   => $prev_link,
+        'page_title'  => 'Search GoogleBook'.($keywords ? ' - '.$keywords : '')
       );
 
       $data['languages'] = BookRequest::getAvailableLanguages();
@@ -129,31 +135,37 @@ class ProductController extends ApplicationController
       $session  = $this->getSession();
 
       try {
-        $gbook = BookRequest::get($id);
-
+        $gbook     = BookRequest::get($id);
         $duplicate = Product::getDuplicateProduct([$gbook->getIsbn10(), $gbook->getIsbn13(), $gbook->getIssn()]);
+
         if ($duplicate) {
-          // $response->redirect('');
-          return $this;
+
+          $this->render(new TwigView('admin/product/duplicate_google_book.html', ['product' => $duplicate]));
+
+        } else {
+
+          $product = Product::newFromGoogleBook($gbook);
+
+          $categories         = Category::findAll();
+          $inputs             = $session->getOldInputBag();
+          $errors             = $session->getErrorBag();
+          $data               = compact('product', 'inputs', 'categories', 'errors');
+          $data['page_title'] = "$product->name - Import";
+
+          $this->render(new TwigView('admin/product/add.html', $data));
+    
         }
 
-        $product = Product::newFromGoogleBook($gbook);
-
-        $categories = Category::findAll();
-        $inputs = $session->getOldInputBag();
-        $errors = $session->getErrorBag();
-        
-        $this->render(new TwigView('admin/product/add.html', compact('product', 'inputs', 'categories', 'errors')));
-    
       } catch (\RuntimeException $e) {
+
         $flash_bag = $session->getFlashBag();
         $flash_bag->set('errors', [$e->getMessage()]);
 
         $response->redirect('App\Admin\Controllers\ProductController','searchGoogleBook');
+        return;
       }
 
     });
-
   }
 
   public function saveFromGoogle()
@@ -191,7 +203,9 @@ class ProductController extends ApplicationController
       $errors = $session->getErrorBag();
       $product = new Product();
       $categories = Category::findAll();
+
       $data = compact('errors', 'inputs', 'product', 'categories'); 
+      $data['page_title'] = "Add Product";
 
       $this->render(new TwigView('admin/product/add.html', $data));
     });
@@ -210,6 +224,7 @@ class ProductController extends ApplicationController
         $errors = $session->getErrorBag();
         
         $data = compact('product','inputs', 'errors', 'categories');
+        $data['page_title'] = "$product->name - Edit";
         $this->render(new TwigView('admin/product/edit.html', $data));
       });
 
@@ -234,7 +249,7 @@ class ProductController extends ApplicationController
       $product = Product::update($id, $request->getParams());
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', array($id));
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', [$id]);
       });
 
     } catch(ResourceNotFoundException $e) {
@@ -242,7 +257,7 @@ class ProductController extends ApplicationController
       $flash->set('inputs', $request->getParams()->all());
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', array($id));
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', [$id]);
       });
 
     } catch(ValidationException $e) {
@@ -251,7 +266,7 @@ class ProductController extends ApplicationController
       $flash->set('inputs', $request->getParams()->all());
 
       $this->respondTo('html', function() use($id) {
-        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', array($id));
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', [$id]);
       });
 
     }

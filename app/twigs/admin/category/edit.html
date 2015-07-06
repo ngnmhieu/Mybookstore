@@ -3,14 +3,15 @@
 <div id="CategoryForm">
 
   <a class="btn btn-default" onclick='history.back(); return false;'><span class="fa fa-reply"></span> Return</a>
-  <h3>Create Category</h3>
+  <h3>Edit Category</h3>
 
-  <form action="{{ webpath('Admin::CategoryController','create') }}" method="post">
+  <form action="{{ webpath('Admin::CategoryController','update', [category.id]) }}" method="post">
 
-    {% include('admin/author/_form.html') %}
+    {% include('admin/category/_form.html') %}
 
   </form>
 
 </div>
 
 {% include('admin/common/footer.html') %}
+

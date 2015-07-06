@@ -10,7 +10,8 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  * @Entity
  * @Table(name="categories")
  */
-class Category extends AppModel {
+class Category extends AppModel 
+{
   protected static $readable = array('id');
   protected static $accessible = array('name', 'products');
   
@@ -23,48 +24,33 @@ class Category extends AppModel {
    */
   protected $products;
 
-  public function __construct() {
+  public function __construct() 
+  {
     $this->products = new ArrayCollection();
   }
 
-  protected function _validate() {
+  protected function _validate() 
+  {
     $vm = static::createValidationManager();
 
     $vm->validate(function($vm) {
-      $vm->register('name', new RequireValidator($this->name));
+
+      $vm->register('name', new RequireValidator($this->name), 'Category name is required');
+
     });
   }
 
-  public static function create($params) {
-
+  public static function create($params) 
+  {
     $em = self::getEntityManager();
     
-    $cat = new static();
-    $cat->name = $params->get('name', '');
+    $cat = new Category();
+    $cat->name = $params->get('name');
     
     $em->persist($cat);
     $em->flush();
 
     return $cat;
-  }
-
-  /**
-   * @throw Exception
-   */
-  static function delete($id) {
-    $em = self::getEntityManager();
-
-    $em->getConnection()->beginTransaction();
-    try {
-      $cat = static::find($id);
-      $em->remove($cat); 
-
-      $em->flush();
-      $em->getConnection()->commit();
-    } catch(Exception $e) {
-      $em->getConnection()->rollback();
-      throw $e;
-    }
   }
 
   /**

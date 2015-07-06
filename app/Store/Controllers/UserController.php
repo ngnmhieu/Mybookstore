@@ -7,15 +7,18 @@ use Markzero\Mvc\View;
 use Markzero\Mvc\AppController;
 use Markzero\Validation\Exception\ValidationException;
 
-class UserController extends ApplicationController {
+class UserController extends ApplicationController 
+{
 
-  function register() {
+  function register() 
+  {
     $this->respondTo('html', function() {
       $this->render(new View\TwigView('user/register.html'));
     });
   }
 
-  function create() {
+  function create() 
+  {
     try {
       $user = User::create($this->getRequest()->request);
       UserSession::setUser($user);

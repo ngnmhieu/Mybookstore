@@ -14,7 +14,8 @@ use Markzero\Auth\Exception\ActionNotAuthorizedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Validation\Exception\ValidationException;
 
-class ProductController extends ApplicationController {
+class ProductController extends ApplicationController 
+{
 
   public function getUserReplacements() {
     $replacements = array();

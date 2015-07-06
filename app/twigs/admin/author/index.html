@@ -1,0 +1,30 @@
+{% include('admin/common/header.html') %}
+
+    {% if errors %}
+    <div class="alert alert-danger" role="alert">
+       <ul>
+         {% for error in errors %}
+         <li>{{ error }}</li>
+         {% endfor %}
+       </ul>
+    </div>
+    {% endif %}
+
+    <div id="ProductControls">
+      <a href="{{ webpath('Admin::AuthorController','add') }}">
+        <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Author</button>
+      </a>
+      <div class="clear"></div>
+    </div>
+
+    <ul>
+      {% for author in authors %}
+      <li>
+        <a href="{{ webpath('Admin::AuthorController','show', [author.id]) }}">{{ author.name }}</a>
+        [<a href="{{ webpath('Admin::AuthorController','edit', [author.id]) }}">edit</a>] 
+        [<a href="{{ webpath('Admin::AuthorController','delete', [author.id]) }}">delete</a>]
+      </li>
+      {% endfor %}
+    </ul>
+
+{% include('admin/common/footer.html') %}

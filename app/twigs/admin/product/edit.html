@@ -1,7 +1,7 @@
 {% include('admin/common/header.html') %}
 
 <div id="ProductForm">
-  <a class="btn btn-default" href="{{ webpath('Admin::ProductController','index') }}"><span class="fa fa-reply"></span> Return</a>
+  <a class="btn btn-default" onclick="history.back(); return false;"><span class="fa fa-reply"></span> Return</a>
   <h3>Update Product</h3>
 
   <form action="{{ webpath('Admin::ProductController','update', [product.id]) }}" method="post">

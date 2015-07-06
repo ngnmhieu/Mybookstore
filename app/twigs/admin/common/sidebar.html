@@ -3,7 +3,7 @@
     <nav class="sidebar-nav">
       <ul id="MainMenu">
         <li class="active">
-        <a href="','">
+        <a href="#">
           <span class="sidebar-nav-item-icon fa fa-cubes fa-lg fa-fw"></span>
           <span class="sidebar-nav-item">Inventory</span>
           <span class="fa arrow"></span>
@@ -23,7 +23,7 @@
         </a>
         </li>
         <li>
-        <a href="{{ webpath('Admin::ProductController','index') }}">
+        <a href="{{ webpath('Admin::AuthorController','index') }}">
           <span class="sidebar-nav-item-icon fa fa-user-secret fa-lg fa-fw"></span>
           <span class="sidebar-nav-item">Authors</span>
         </a>
@@ -41,6 +41,6 @@
 
 <script type="text/javascript" charset="utf-8">
 $(function() {
-  $("','MainMenu").metisMenu()
+  $("#MainMenu").metisMenu()
   });
 </script>
