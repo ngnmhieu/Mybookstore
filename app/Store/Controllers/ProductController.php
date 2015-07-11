@@ -17,24 +17,32 @@ use Markzero\Validation\Exception\ValidationException;
 class ProductController extends ApplicationController 
 {
 
-  public function getUserReplacements() {
+  public function getUserReplacements()
+  {
     $replacements = array();
 
-    $signed_in = UserSession::isSignedIn();
+    $user_session = UserSession::getInstance();
+
+    $signed_in = $user_session->isSignedIn();
+
+    $replacements['user']         = $signed_in ?  $user_session->getUser() : new User();
     $replacements['is_signed_in'] = $signed_in;
-    $replacements['user'] = $signed_in ?  UserSession::getUser() : new User(); 
 
     return $replacements;
   }
 
-  public function index() {
+  public function index() 
+  {
     $products = Product::findAll();
-    $latests = Product::getLatest();
+    $latests  = Product::getLatest();
 
     $this->respondTo('html', function() use ($products, $latests) {
 
-      $data['products'] = $products;
-      $data['latests'] = $latests;
+      $data = [
+        'products' => $products,
+        'latests'  => $latests
+      ];
+
       $user_replacements = $this->getUserReplacements();
       $data = array_merge($user_replacements, $data);
 

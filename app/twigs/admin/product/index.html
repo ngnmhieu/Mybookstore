@@ -14,8 +14,10 @@
     <table class="table table-striped">
       <tr>
         <th style="width: 20px"></th>
-        <th style="width: 70px">ProductID</th>
+        <th style="width: 30px">ID</th>
         <th>Name</th>
+        <th>Authors</th>
+        <th>Update at</th>
         <th>Price</th>
       </tr>
 
@@ -24,7 +26,9 @@
         <td><a href="{{ webpath('Admin::ProductController','edit', [product.id]) }}"><span class="fa fa-pencil fa-lg"></span></a></td>
         <td>{{ product.id }}</td>
         <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
+        <td>{{ product.getAuthorNames | join(',') }}</td>
+        <td>{{ product.updated_at.format('d-m-Y') }}</td>
+        <td>{{ product.price | number_format(2, ',', '.') }}</td>
       </tr>
       {% endfor %}
 

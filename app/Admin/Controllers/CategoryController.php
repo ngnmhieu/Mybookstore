@@ -121,6 +121,29 @@ class CategoryController extends ApplicationController
       $flash    = $this->getSession()->getFlashBag();
 
       try {
+        $cat      = Category::find($id);
+        $products = $cat->products;
+
+        $this->render(new TwigView('admin/category/delete.html', compact('cat', 'products')));
+      } catch (ResourceNotFoundException $e) {
+
+        $flash->add('errors', "Product #$id not found");
+        $response->redirect('App\Admin\Controllers\CategoryController', 'index');
+
+      }
+
+    });
+  }
+
+  function doDelete($id) 
+  {
+
+    $this->respondTo('html', function() use($id) {
+
+      $response = $this->getResponse();
+      $flash    = $this->getSession()->getFlashBag();
+
+      try {
 
         Category::delete($id);
         $response->redirect('App\Admin\Controllers\CategoryController', 'index');

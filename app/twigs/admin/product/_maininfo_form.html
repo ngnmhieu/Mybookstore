@@ -1,31 +1,64 @@
+{% if (errors.count != 0) %}
+  <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span>The following errors has occured:</span>
+     <ul>
+       {% for error in error_msgs %}
+       <li>{{ error }} </li>
+       {% endfor %}
+     </ul>
+  </div>
+{% endif %}
+
 <table class="table table-striped">
 
   <tr class="form-group {{ errors.get('product[name]', null, true) ? 'has-error' : '' }}">
     <td><label for="name">Name</label></td>
-    <td><input type="text" name="product[name]" value="{{ inputs.get('product[name]', product.name, true) }}" class="form-control" id="name"></td>
+    <td><input type="text" name="product[name]" value="{{ inputs.get('product[name]', product.name, true) }}" class="form-control" id="name" data-toggle="tooltip" data-placement="left" title="{{ errors.get('product[name]','', true) }}"></td>
   </tr>
 
 
   <tr class="form-group {{ errors.get('product[isbn_10]', null, true) ? 'has-error' : '' }}">
-    <td><label for="isbn_10">ISBN 10</label></td>
-    <td><input type="text" name="product[isbn_10]" value="{{ inputs.get('product[isbn_10]', product.getIsbn10, true) }}" class="form-control" id="isbn_10"></td>
+    <td>
+      <label for="isbn_10">ISBN 10</label>
+    </td>
+
+    <td>
+      <input type="text" name="product[isbn_10]" value="{{ inputs.get('product[isbn_10]', product.getIsbn10.value, true) }}" class="form-control" id="isbn_10" data-toggle="tooltip" data-placement="left" title="{{ errors.get('product[isbn_10]','', true) }}">
+    </td>
   </tr>
+
   <tr class="form-group {{ errors.get('product[isbn_13]', null, true) ? 'has-error' : '' }}">
-    <td><label for="isbn_13">ISBN 13</label></td>
-    <td><input type="text" name="product[isbn_13]" value="{{ inputs.get('product[isbn_13]', product.getIsbn13, true) }}" class="form-control" id="isbn_13"></td>
+    <td>
+      <label for="isbn_13">ISBN 13</label>
+    </td>
+    <td>
+      <input type="text" name="product[isbn_13]" value="{{ inputs.get('product[isbn_13]', product.getIsbn13.value, true) }}" class="form-control" id="isbn_13" data-toggle="tooltip" data-placement="left" title="{{ errors.get('product[isbn_13]','', true) }}">
+    </td>
   </tr>
+
   <tr class="form-group {{ errors.get('product[issn]', null, true) ? 'has-error' : '' }}">
-    <td><label for="issn">ISSN</label></td>
-    <td><input type="text" name="product[issn]" value="{{ inputs.get('product[issn]', product.getIssn, true) }}" class="form-control" id="issn"></td>
+    <td>
+      <label for="issn">ISSN</label>
+    </td>
+    <td>
+      <input type="text" name="product[issn]" value="{{ inputs.get('product[issn]', product.getIssn.value, true) }}" class="form-control" id="issn" data-toggle="tooltip" data-placement="left" title="{{ errors.get('product[issn]','', true) }}">
+    </td>
   </tr>
 
   <tr>
-    <td><label for="price">Price</label></td>
-    <td><input type="text" name="product[price]" value="{{ inputs.get('product[price]', product.price, true) }}" class="form-control" id="price"></td>
+    <td>
+      <label for="price">Price</label>
+    </td>
+    <td>
+      <input type="text" name="product[price]" value="{{ inputs.get('product[price]', product.price, true) }}" class="form-control" id="price" data-toggle="tooltip" data-placement="left" title="{{ errors.get('product[price]','', true) }}">
+    </td>
   </tr>
 
   <tr>
-    <td><label for="short_desc">Short Description</label></td>
+    <td>
+      <label for="short_desc">Short Description</label>
+    </td>
     <td>
       <textarea id="short_desc" name="product[short_desc]" class="form-control" cols="30" rows="3">{{ inputs.get("product[short_desc]", product.short_desc, true) }}</textarea>
     </td>
@@ -33,20 +66,27 @@
 
 
   <tr>
-    <td><label for="description">Description</label></td>
+    <td>
+      <label for="description">Description</label>
+    </td>
     <td>
       <textarea id="description" name="product[description]" class="form-control" cols="30" rows="3">{{ inputs.get("product[description]", product.description, true) }}</textarea>
     </td>
   </tr>
 
-  <tr>
+  <tr class="form-group {{ errors.get('product[category_id]', null, true) ? 'has-error' : '' }}">
     <td><label for="category">Category</label></td>
     <td>
-      <select name="product[category_id]" id="category">
+      <select name="product[category_id]" id="category" data-toggle="tooltip" data-placement="left" title="{{ errors.get('product[category_id]','', true) }}">
+        {% set current_cat = inputs.get('product[category_id]', product.category.id, true) %}
         {% for cat in categories %}
-          <option value="{{ cat.id }}">{{ cat.name }}</option>
+        <option value="{{ cat.id }}" {{ cat.id == current_cat ? 'selected' : '' }}>{{ cat.name }}</option>
         {% endfor %}
       </select>
     </td>
   </tr>
 </table>
+
+{% if errors.count != 0 %}
+  {% include('admin/common/js_enable_tooltip.html') %}
+{% endif %}

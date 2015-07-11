@@ -294,204 +294,135 @@ class Book
   /**
    * @return string
    */
-  public function getId()
-  {
-    return $this->id;
-  }
+  public function getId() { return $this->id; }
 
   /**
    * @return string
    */
-  public function getEtag()
-  {
-    return $this->etag;
-  }
+  public function getEtag() { return $this->etag; }
 
   /**
    * @return string
    */
-  public function getSelfLink()
-  {
-    return $this->selfLink;
-  }
+  public function getSelfLink() { return $this->selfLink; }
 
   /**
    * @return string
    */
-  public function getTitle()
-  {
-    return $this->title;
-  }
+  public function getTitle() { return $this->title; }
 
   /**
    * @return string
    */
-  public function getSubtitle()
-  {
-    return $this->subtitle;
-  }
+  public function getSubtitle() { return $this->subtitle; }
 
   /**
    * @return array
    */
-  public function getAuthors()
-  {
-    return $this->authors;
-  }
+  public function getAuthors() { return $this->authors; }
 
   /**
    * @return array
    */
-  public function getCategories()
-  {
-    return $this->categories;
-  }
+  public function getCategories() { return $this->categories; }
 
   /**
    * @return array
    */
-  public function getMainCategory()
-  {
-    return $this->mainCategory;
-  }
+  public function getMainCategory() { return $this->mainCategory; }
 
   /**
    * @return string
    */
-  public function getPublisher()
-  {
-    return $this->publisher;
-  }
+  public function getPublisher() { return $this->publisher; }
 
   /**
    * @return string
    */
-  public function getDescription()
-  {
-    return $this->description;
-  }
+  public function getDescription() { return $this->description; }
 
   /**
    * @return string
    */
-  public function getPrintType()
-  {
-    return $this->printType;
-  }
+  public function getPrintType() { return $this->printType; }
 
   /**
    * @return \DateTime
    */
-  public function getPublishedDate()
-  {
-    return $this->publishedDate;
-  }
+  public function getPublishedDate() { return $this->publishedDate; }
 
   /**
    * @return int
    */
-  public function getPageCount()
-  {
-    return $this->pageCount;
-  }
+  public function getPageCount() { return $this->pageCount; }
 
   /**
    * @return string
    */
-  public function getIsbn10()
-  {
-    return $this->isbn10;
-  }
+  public function getIsbn10() { return $this->isbn10; }
 
   /**
    * @return string
    */
-  public function getIsbn13()
-  {
-    return $this->isbn13;
-  }
+  public function getIsbn13() { return $this->isbn13; }
 
   /**
    * @return string
    */
-  public function getIssn()
-  {
-    return $this->issn;
-  }
+  public function getIssn() { return $this->issn; }
 
   /**
    * @return string
    */
-  public function getLanguage()
-  {
-    return $this->language;
-  }
+  public function getLanguage() { return $this->language; }
 
   /**
    * @return string
    */
-  public function getOtherIdentifier()
-  {
-    return $this->other_identifier;
-  }
+  public function getOtherIdentifier() { return $this->other_identifier; }
 
   /**
    * @return string
    */
-  public function getThumbnail()
-  {
-    return $this->thumbnail;
-  }
+  public function getThumbnail() { return $this->thumbnail; }
 
   /**
    * @return string
    */
-  public function getImage()
-  {
-    return $this->image;
-  }
+  public function getImage() { return $this->image; }
 
   /**
    * @return float
    */
-  public function getListPrice()
-  {
-    return $this->listPrice;
-  }
+  public function getListPrice() { return $this->listPrice; }
 
   /**
    * @return string
    */
-  public function getListPriceCurrency()
-  {
-    return $this->listPriceCurrency;
-  }
+  public function getListPriceCurrency() { return $this->listPriceCurrency; }
 
   /**
    * @return float
    */
-  public function getRetailPrice()
-  {
-    return $this->retailPrice;
-  }
+  public function getRetailPrice() { return $this->retailPrice; }
 
   /**
    * @return string
    */
-  public function getRetailPriceCurrency()
-  {
-    return $this->retailPriceCurrency;
-  }
+  public function getRetailPriceCurrency() { return $this->retailPriceCurrency; }
 
-  public function getPreviewLink() {
-    return $this->previewLink;
-  }
+  /**
+   * @return string
+   */
+  public function getPreviewLink() { return $this->previewLink; }
 
-  public function getInfoLink() {
-    return $this->infoLink;
-  }
+  /**
+   * @return string
+   */
+  public function getInfoLink() { return $this->infoLink; }
 
-  public function getCanonicalVolumeLink() {
-    return $this->canonicalVolumeLink;
-  }
+  /**
+   * @return string
+   */
+  public function getCanonicalVolumeLink() { return $this->canonicalVolumeLink; }
 }

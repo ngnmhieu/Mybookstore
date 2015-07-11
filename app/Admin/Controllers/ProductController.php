@@ -199,12 +199,14 @@ class ProductController extends ApplicationController
     $this->respondTo('html', function() {
       $session = $this->getSession();
 
-      $inputs = $session->getOldInputBag();
-      $errors = $session->getErrorBag();
+      $inputs     = $session->getOldInputBag();
+      $errors     = $session->getErrorBag();
+      $error_msgs = array_flatten($errors->all());
+
       $product = new Product();
       $categories = Category::findAll();
 
-      $data = compact('errors', 'inputs', 'product', 'categories'); 
+      $data = compact('error_msgs', 'errors', 'inputs', 'product', 'categories'); 
       $data['page_title'] = "Add Product";
 
       $this->render(new TwigView('admin/product/add.html', $data));
@@ -218,12 +220,14 @@ class ProductController extends ApplicationController
       $product = Product::find($id);
 
       $this->respondTo('html', function() use($product) {
+
         $categories = Category::findAll();
-        $session = $this->getSession();
-        $inputs = $session->getOldInputBag();
-        $errors = $session->getErrorBag();
-        
-        $data = compact('product','inputs', 'errors', 'categories');
+        $session    = $this->getSession();
+        $inputs     = $session->getOldInputBag();
+        $errors     = $session->getErrorBag();
+        $error_msgs = array_flatten($errors->all());
+
+        $data = compact('error_msgs', 'product','inputs', 'errors', 'categories');
         $data['page_title'] = "$product->name - Edit";
         $this->render(new TwigView('admin/product/edit.html', $data));
       });
@@ -241,7 +245,7 @@ class ProductController extends ApplicationController
   public function update($id) 
   {
 
-    $flash = $this->getSession()->getFlashBag();
+    $flash   = $this->getSession()->getFlashBag();
     $request = $this->getRequest();
 
     try {

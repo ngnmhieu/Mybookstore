@@ -1,0 +1,21 @@
+{% include('admin/common/header.html') %}
+
+<div id="CategoryForm">
+
+  <a class="btn btn-default" onclick='history.back(); return false;'><span class="fa fa-reply"></span> Return</a>
+  <h3>Delete Category `{{ cat.name }}`</h3>
+  Notice: These products will also be deleted.
+
+  <ul>
+    {% for product in products %}
+    <li>{{ product.name }} by {{ product.getAuthorNames | join(',') }}</li>
+    {% endfor %}
+  </ul>
+
+  <form action="{{ webpath('Admin::CategoryController','doDelete', [cat.id]) }}" method="post">
+    <button type="submit" class="btn btn-danger">Delete</button>
+  </form>
+
+</div>
+
+{% include('admin/common/footer.html') %}

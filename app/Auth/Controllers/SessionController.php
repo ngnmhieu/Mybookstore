@@ -21,7 +21,7 @@ class SessionController extends ApplicationController
   function create() 
   {
     try {
-      UserSession::create($this->getRequest()->request);
+      UserSession::getInstance()->create($this->getRequest()->request);
 
       $this->respondTo('html', function() {
         $this->getResponse()->redirect('App\Store\Controllers\ProductController', 'index');
@@ -52,7 +52,7 @@ class SessionController extends ApplicationController
 
   function delete() 
   {
-    UserSession::delete();
+    UserSession::getInstance()->destroy();
 
     $this->respondTo('html', function() {
       $this->getResponse()->redirect('App\Store\Controllers\ProductController', 'index');

@@ -21,7 +21,8 @@ class UserController extends ApplicationController
   {
     try {
       $user = User::create($this->getRequest()->request);
-      UserSession::setUser($user);
+
+      UserSession::getInstance()->setUser($user);
 
       $this->respondTo('html', function() use($user) {
         $data['user'] = $user;

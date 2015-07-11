@@ -10,9 +10,5 @@
 </table>
 
 {% if errors.count != 0 %}
-  <script type="text/javascript" charset="utf-8">
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    })
-  </script>
+  {% include('admin/common/js_enable_tooltip.html') %}
 {% endif %}

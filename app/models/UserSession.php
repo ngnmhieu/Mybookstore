@@ -3,48 +3,87 @@ namespace App\Models;
 
 use Markzero\App;
 use Markzero\Mvc\AppModel;
+use Markzero\Http\Session;
 use Markzero\Validation\Validator;
+use Markzero\Validation\ValidationManager;
 use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Validation\Exception\ValidationException;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 
-class UserSession extends AppModel 
+/**
+ * A Singleton represents User session
+ */
+class UserSession
 {
 
-  protected function _validate() { }
+  /**
+   * @var Markzero\Http\Session
+   */
+  protected $session;
 
-  static function setUser($user) {
-    self::getSession()->set('user.id', $user->id);
+  /**
+   * @var UserSession
+   */
+  protected static $instance = null;
+
+  /**
+   * @var string
+   */
+  public static function getInstance()
+  {
+    if (self::$instance == null) {
+      self::$instance = new static(App::$session);
+    }
+
+    return self::$instance;
   }
 
-  static function unsetUser() {
-    self::getSession()->remove('user.id');
-  }
+  protected function __construct(Session $session)
+  {
+    $this->session = $session;
+  } 
 
-  static function getSession() {
-    return App::$session;
+  public function setUser(User $user)
+  {
+    $this->session->set('user.id', $user->id);
   }
 
   /**
-   *  @throw Markzero\Http\Exception\ResourceNotFoundException
-   *  @throw Markzero\Auth\Exception\AuthenticationFailedException
+   * Remove User ID in session
    */
-  static function create($params) {
+  public function unsetUser()
+  {
+    $this->session->remove('user.id');
+  }
 
-    $email = $params->get('user[email]', null, true);
+  /**
+   * Create a new User session
+   * @throw Markzero\Http\Exception\ResourceNotFoundException
+   *        Markzero\Auth\Exception\AuthenticationFailedException
+   *        Markzero\Validation\Exception\ValidationException
+   */
+  public function create($params)
+  {
+    $email    = $params->get('user[email]', null, true);
     $password = $params->get('user[password]', null, true);
 
-    $vm = self::createValidationManager();
-    $vm->register('user.email', new Validator\EmailValidator($email));
-    $vm->register('user.password', new Validator\RequireValidator($password), 'Password is required');
-    $vm->doValidate();
+    $vm = new ValidationManager();
+
+    $vm->validate(function($vm) use($email, $password) {
+
+      $vm->register('user.email', new Validator\EmailValidator($email));
+      $vm->register('user.password', new Validator\RequireValidator($password), 'Password is required');
+
+    });
 
     $user = User::findOneBy(array('email' => $email));
+
     if ($user === null) {
       throw new ResourceNotFoundException();
     }
 
     if (password_verify($password, $user->password_hash)) {
-      self::setUser($user);
+      $this->setUser($user);
     } else {
       throw new AuthenticationFailedException();
     }
@@ -56,21 +95,22 @@ class UserSession extends AppModel
    * Is user signed in
    * @return boolean
    */
-  static function isSignedIn() {
-    $session = self::getSession();
-    return $session->has('user.id') && (User::find($session->get('user.id')) !== null);
+  public function isSignedIn()
+  {
+    return $this->session->has('user.id') && (User::find($this->session->get('user.id')) !== null);
   }
 
   /**
    * @return User|null
    */
-  static function getUser() {
-    $session = self::getSession();
-    return self::isSignedIn() ? User::find($session->get('user.id')) : null;
+  public function getUser()
+  {
+    return $this->isSignedIn() ? User::find($this->session->get('user.id')) : null;
   }
 
-  static function delete() {
-    self::unsetUser();
+  public function destroy() 
+  {
+    $this->unsetUser();
   }
 
 }

@@ -32,16 +32,25 @@ class AuthorController extends ApplicationController
 
   function show($id) 
   {
-    $author = Author::find($id);
 
-    $products = $author->products;
-
-    $this->respondTo('html', function() use($author, $products) {
+    $this->respondTo('html', function() use($id) {
       
-      $data['author']   = $author;
-      $data['products'] = $products;
+      $author = Author::find($id);
 
-      $this->render(new TwigView('admin/author/show.html', $data));
+      if ($author != null)
+      {
+        $data['author'] = $author;
+        $data['books']  = $author->books;
+
+        $this->render(new TwigView('admin/author/show.html', $data));
+
+      } else {
+
+        $flash = $this->getSession()->getFlashBag();
+        $flash->add('errors', "Author #$id not found.");
+        $this->getResponse()->redirect('App\Admin\Controllers\AuthorController', 'index');
+      }
+
     });
   }
 

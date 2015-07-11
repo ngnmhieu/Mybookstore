@@ -1,20 +1,46 @@
 {% include('admin/common/header.html') %}
 
-    <div id="ProductControls">
+    <div id="CategoryControls">
       <a href="{{ webpath('Admin::CategoryController','add') }}">
         <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Category</button>
       </a>
       <div class="clear"></div>
     </div>
 
-    <ul>
+    <table class="table " style="margin-top: 10px">
+      <thead>
+        <th>Category Name</th>
+        <th style='width: 15%'>Created at</th>
+        <th style='width: 15%'>Updated at</th>
+        <th style='width: 12%'>Action</th>
+      </thead>
+      
       {% for cat in categories %}
-      <li>
-        <a href="{{ webpath('Admin::CategoryController','show', [cat.id]) }}">{{ cat.name }}</a>
-        [<a href="{{ webpath('Admin::CategoryController','edit', [cat.id]) }}">edit</a>] 
-        [<a href="{{ webpath('Admin::CategoryController','delete', [cat.id]) }}">delete</a>]
-      </li>
+      <tr>
+        <td>
+          <a href="{{ webpath('Admin::CategoryController','show', [cat.id]) }}">{{ cat.name }}</a>
+        </td>
+
+        <td>{{ cat.created_at.format("d-m-Y") }}</td>
+        <td>{{ cat.updated_at.format("d-m-Y") }}</td>
+
+        <td style="text-align: left">
+          <a href="{{ webpath('Admin::CategoryController','edit', [cat.id]) }}">
+            <span class="fa fa-stack">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-pencil fa-stack-1x"></i>
+          </span>
+        </a>
+
+        <a href="{{ webpath('Admin::CategoryController','delete', [cat.id]) }}">
+          <span class="fa fa-stack">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-trash fa-stack-1x"></i>
+          </span>
+        </a>
+        </td>
+      </tr>
       {% endfor %}
-    </ul>
+    </table>
 
 {% include('admin/common/footer.html') %}

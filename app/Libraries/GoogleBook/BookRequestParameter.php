@@ -50,11 +50,16 @@ class BookRequestParameter
   /**
    * return array
    */
-  public function getFields() {
+  public function getFields() 
+  {
     return $this->fields;
   }
 
-  public function setFields(array $fields) {
+  /**
+   * @return $this
+   */
+  public function setFields(array $fields)
+  {
     $this->fields = $fields;
     return $this;
   }
@@ -62,11 +67,16 @@ class BookRequestParameter
   /**
    * @return string
    */
-  public function getKeywords() {
+  public function getKeywords()
+  {
     return $this->keywords;
   }
 
-  public function setKeywords($keywords) {
+  /**
+   * @return $this
+   */
+  public function setKeywords($keywords)
+  {
     $this->keywords = $keywords;
     return $this;
   }
@@ -74,11 +84,16 @@ class BookRequestParameter
   /**
    * @return array
    */
-  public function getSpecialKeywords() {
+  public function getSpecialKeywords()
+  {
     return $this->special_keywords;
   }
 
-  public function setSpecialKeywords($special_keywords) {
+  /**
+   * @return $this
+   */
+  public function setSpecialKeywords($special_keywords)
+  {
     $this->special_keywords = $special_keywords;
     return $this;
   }
@@ -86,11 +101,16 @@ class BookRequestParameter
   /**
    * @return string
    */
-  public function getLanguage() {
+  public function getLanguage()
+  {
     return $this->language;
   }
 
-  public function setLanguage($language) {
+  /**
+   * @return $this
+   */
+  public function setLanguage($language)
+  {
     $this->language = $language;
     return $this;
   }
@@ -98,11 +118,16 @@ class BookRequestParameter
   /**
    * @return int
    */
-  public function getLimit() {
+  public function getLimit()
+  {
     return $this->limit;
   }
 
-  public function setLimit($limit) {
+  /**
+   * @return $this
+   */
+  public function setLimit($limit)
+  {
     $this->limit = (int) $limit;
     return $this;
   }
@@ -110,11 +135,16 @@ class BookRequestParameter
   /**
    * @return int
    */
-  public function getOffset() {
+  public function getOffset()
+  {
     return $this->offset;
   }
 
-  public function setOffset($offset) {
+  /**
+   * @return $this
+   */
+  public function setOffset($offset)
+  {
     $this->offset = (int) $offset;
     return $this;
   }

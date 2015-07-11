@@ -12,15 +12,23 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  */
 class Category extends AppModel 
 {
-  protected static $readable = array('id');
-  protected static $accessible = array('name', 'products');
+  protected static $readable   = array('id');
+  protected static $accessible = array('name', 'products', 'created_at', 'updated_at');
   
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
+
   /** @Column(type="string") **/
   protected $name;
+
+  /** @Column(type="datetime") */
+  protected $created_at;
+
+  /** @Column(type="datetime") */
+  protected $updated_at;
+
   /** 
-   * @OneToMany(targetEntity="Product", mappedBy="category")
+   * @OneToMany(targetEntity="Product", mappedBy="category", cascade={"remove"})
    */
   protected $products;
 
@@ -44,8 +52,10 @@ class Category extends AppModel
   {
     $em = self::getEntityManager();
     
-    $cat = new Category();
-    $cat->name = $params->get('name');
+    $cat             = new Category();
+    $cat->name       = $params->get('name');
+    $cat->created_at = new \DateTime("now");
+    $cat->updated_at = new \DateTime("now");
     
     $em->persist($cat);
     $em->flush();
@@ -63,7 +73,8 @@ class Category extends AppModel
     if ($cat === null) {
       throw new ResourceNotFoundException();
     }
-    $cat->name = $params->get('name');
+    $cat->name       = $params->get('name');
+    $cat->updated_at = new \DateTime("now");
 
     $em->persist($cat);
     $em->flush();

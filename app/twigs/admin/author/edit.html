@@ -3,9 +3,9 @@
 <div id="CategoryForm">
 
   <a class="btn btn-default" onclick='history.back(); return false;'><span class="fa fa-reply"></span> Return</a>
-  <h3>Create Category</h3>
+  <h3>Edit author</h3>
 
-  <form action="{{ webpath('Admin::CategoryController','update', [cat.id]) }}" method="post">
+  <form action="{{ webpath('Admin::AuthorController','update', [cat.id]) }}" method="post">
 
     {% include('admin/author/_form.html') %}
 

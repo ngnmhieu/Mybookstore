@@ -23,11 +23,12 @@ class BookRequest
     'vi' => 'Vietnamese'
   );
 
-  public static function getAvailableLanguages() {
+  public static function getAvailableLanguages() 
+  {
     return self::$AVAILABLE_LANGUAGES;
   }
 
-  private static function getHttpClient() 
+  private static function getHttpClient()
   {
     return new \GuzzleHttp\Client(); 
   }
@@ -80,7 +81,8 @@ class BookRequest
    * @param App\Lib\GoogleBook\BookRequestParameter
    * @return stdClass | null
    */
-  private static function sendSearchRequest(BookRequestParameter $param) {
+  private static function sendSearchRequest(BookRequestParameter $param) 
+  {
 
     /** construct query **/
     $query_parts = array();

@@ -13,7 +13,7 @@ use Markzero\Http\Exception\ResourceNotFoundException;
 class Author extends AppModel
 {
   protected static $readable = ['id'];
-  protected static $accessible = ['name', 'books'];
+  protected static $accessible = ['name', 'books', 'created_at', 'updated_at'];
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -21,6 +21,11 @@ class Author extends AppModel
   /** @Column(type="string") **/
   protected $name;
 
+  /** @Column(type="datetime") **/
+  protected $created_at;
+
+  /** @Column(type="datetime") **/
+  protected $updated_at;
   /**
    * @ManyToMany(targetEntity="Product", inversedBy="authors")
    * @JoinTable(name="authors_products")
@@ -42,8 +47,10 @@ class Author extends AppModel
   {
     $em = self::getEntityManager();
 
-    $author = new Author();
-    $author->name = $params->get('name');
+    $author             = new Author();
+    $author->name       = $params->get('name');
+    $author->created_at = new \DateTime("now");
+    $author->updated_at = new \DateTime("now");
 
     $em->persist($author);
     $em->flush();
@@ -61,7 +68,8 @@ class Author extends AppModel
       throw new ResourceNotFoundException();  
     }
 
-    $author->name = $params->get('name');
+    $author->name       = $params->get('name');
+    $author->updated_at = new \DateTime("now");
 
     $em->persist($author);
     $em->flush();

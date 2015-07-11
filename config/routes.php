@@ -51,6 +51,7 @@ $r->get('/admin/category/add','App\Admin\Controllers\CategoryController','add');
 $r->post('/admin/category/','App\Admin\Controllers\CategoryController','create');
 $r->post('/admin/category/([0-9]+)','App\Admin\Controllers\CategoryController','update');
 $r->get('/admin/category/([0-9]+)/delete','App\Admin\Controllers\CategoryController','delete');
+$r->post('/admin/category/([0-9]+)/delete','App\Admin\Controllers\CategoryController','doDelete');
 
 /** User **/
 $r->get('/user/register','App\Store\Controllers\UserController','register');
@@ -60,4 +61,3 @@ $r->post('/user/','App\Store\Controllers\UserController','create');
 $r->get('/session/sign_in','App\Auth\Controllers\SessionController','signIn');
 $r->get('/session/sign_out','App\Auth\Controllers\SessionController','delete');
 $r->post('/session/','App\Auth\Controllers\SessionController','create');
-

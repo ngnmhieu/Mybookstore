@@ -10,21 +10,47 @@
     </div>
     {% endif %}
 
-    <div id="ProductControls">
+    <div id="AuthorControls">
       <a href="{{ webpath('Admin::AuthorController','add') }}">
         <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Author</button>
       </a>
       <div class="clear"></div>
     </div>
 
-    <ul>
+    <table class="table " style="margin-top: 10px">
+      <thead>
+        <th>Author Name</th>
+        <th style='width: 15%'>Created at</th>
+        <th style='width: 15%'>Updated at</th>
+        <th style='width: 12%'>Action</th>
+      </thead>
+      
       {% for author in authors %}
-      <li>
-        <a href="{{ webpath('Admin::AuthorController','show', [author.id]) }}">{{ author.name }}</a>
-        [<a href="{{ webpath('Admin::AuthorController','edit', [author.id]) }}">edit</a>] 
-        [<a href="{{ webpath('Admin::AuthorController','delete', [author.id]) }}">delete</a>]
-      </li>
+      <tr>
+        <td>
+          <a href="{{ webpath('Admin::AuthorController','show', [author.id]) }}">{{ author.name }}</a>
+        </td>
+
+        <td>{{ author.created_at.format("d-m-Y") }}</td>
+        <td>{{ author.updated_at.format("d-m-Y") }}</td>
+
+        <td style="text-align: left">
+          <a href="{{ webpath('Admin::AuthorController','edit', [author.id]) }}">
+            <span class="fa fa-stack">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-pencil fa-stack-1x"></i>
+          </span>
+        </a>
+
+        <a href="{{ webpath('Admin::AuthorController','delete', [author.id]) }}">
+          <span class="fa fa-stack">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-trash fa-stack-1x"></i>
+          </span>
+        </a>
+        </td>
+      </tr>
       {% endfor %}
-    </ul>
+    </table>
 
 {% include('admin/common/footer.html') %}
