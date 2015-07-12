@@ -3,17 +3,39 @@
 <div id="CategoryForm">
 
   <a class="btn btn-default" onclick='history.back(); return false;'><span class="fa fa-reply"></span> Return</a>
-  <h3>Delete Category `{{ cat.name }}`</h3>
-  Notice: These products will also be deleted.
+  <h4>Are you sure you want to delete category `{{ cat.name }}`?</h4>
 
-  <ul>
-    {% for product in products %}
-    <li>{{ product.name }} by {{ product.getAuthorNames | join(',') }}</li>
-    {% endfor %}
-  </ul>
+    {% if (products|length != 0) %}
+      <div class="alert alert-danger" role="alert">
+        <p> <span class="fa fa-warning"></span> These products will also be deleted:</p>
+
+        <ul>
+          {% for product in products %}
+          <li>{{ product.name }} by {{ product.getAuthorNames | join(',') }}</li>
+          {% endfor %}
+        </ul>
+          
+      </div>
+
+      <p>You can migrate these products to other category:</p>
+
+      <form action="{{ webpath('Admin::CategoryController','migrate', [cat.id]) }}" method="post">
+          <select name="alt_category_id" id="alt_category_id">
+            {% for cat in categories %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+
+          <button type="submit" class="btn btn-primary">Mirgrate</button>
+      </form>
+
+      <br />
+    {% endif %}
 
   <form action="{{ webpath('Admin::CategoryController','doDelete', [cat.id]) }}" method="post">
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit" class="btn btn-danger">
+      <span class="fa fa-trash"></span> Delete it
+    </button>
   </form>
 
 </div>

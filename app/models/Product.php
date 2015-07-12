@@ -10,6 +10,7 @@ use Markzero\Validation\Validator\RequireValidator;
 use Markzero\Validation\Validator\FunctionValidator;
 use Markzero\Validation\Exception\ValidationException;
 use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Http\Exception\DuplicateResourceException;
 
 /**
  * @Entity 
@@ -18,7 +19,7 @@ use Markzero\Http\Exception\ResourceNotFoundException;
 class Product extends AppModel 
 {
   protected static $readable = array('id');
-  protected static $accessible = ['name', 'price', 'short_desc', 'description', 'ratings', 'category', 'barcodes', 'authors', 'updated_at', 'created_at'];
+  protected static $accessible = ['name', 'price', 'short_desc', 'description', 'ratings', 'category', 'barcodes', 'authors', 'images', 'updated_at', 'created_at'];
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -66,14 +67,21 @@ class Product extends AppModel
   protected $updated_at;
 
   /**
-   * @ManyToMany(targetEntity="Author", mappedBy="books")
+   * @ManyToMany(targetEntity="Author", mappedBy="books", cascade={"remove"})
    */
   protected $authors;
+
+  /**
+   * @OneToMany(targetEntity="Image", mappedBy="product", cascade={"persist"})
+   */
+  protected $images;
 
   public function __construct() 
   {
     $this->ratings  = new ArrayCollection();
     $this->barcodes = new ArrayCollection();
+    $this->authors  = new ArrayCollection();
+    $this->images   = new ArrayCollection();
   }
 
   /**
@@ -227,6 +235,49 @@ class Product extends AppModel
     });
   }
 
+
+  /**
+   * @param Author 
+   * @throws DuplicateResourceException
+   */
+  public function addAuthor(Author $author)
+  {
+    $em = self::getEntityManager();
+
+    if ($this->authors->contains($author)) {
+
+      throw new DuplicateResourceException();
+
+    } else {
+
+      $this->authors[] = $author; 
+      $author->books[] = $this; 
+      $em->persist($this);
+      $em->flush();
+    }
+  }
+
+  /**
+   * @param Author
+   * @return boolean
+   */
+  public function removeAuthor(Author $author)
+  {
+
+    if (!$author->books->contains($this) || !$this->authors->contains($author)) {
+      return false;  
+    }
+
+    $em = self::getEntityManager();
+    $this->authors->removeElement($author);
+    $author->books->removeElement($this);
+
+    $em->persist($this);
+    $em->flush();
+
+    return true;
+  }
+
   /**
    * @param 
    * @throw Markzero\Validation\Exception\ValidationException
@@ -267,6 +318,14 @@ class Product extends AppModel
     $product->price       = floatval($params->get('product[price]', 0.0, true));;
     $product->created_at  = new \DateTime("now");
     $product->updated_at  = new \DateTime("now");
+
+    if ($images = $params->get('product[remote_images]', null, true)) {
+      foreach ($images as $img_src) {
+        $img = new Image($product, $img_src, Image::TYPE_REMOTE);
+        $em->persist($img);
+        $product->images[] = $img;
+      }
+    }
 
     $catid = $params->get('product[category_id]', null, true);
     $cat = Category::find($catid); 
@@ -362,31 +421,6 @@ class Product extends AppModel
   }
 
   /**
-   * @throw Markzero\Http\Exception\ResourceNotFoundException
-   *        Exception
-   */
-  public static function delete($id)
-  {
-    $product = Product::find($id);
-    if ($product === null) {
-      throw new ResourceNotFoundException();
-    }
-
-    $conn = App::$em->getConnection();
-    $conn->beginTransaction();
-
-    try {
-      App::$em->remove($product); 
-      App::$em->flush();
-
-      $conn->commit();
-    } catch(Exception $e) {
-      $conn->rollback();
-      throw $e;
-    }
-  }
-
-  /**
    * Return latest books
    */
   static function getLatest()
@@ -397,7 +431,7 @@ class Product extends AppModel
   static function newFromGoogleBook(Book $gbook) 
   {
     $em = self::getEntityManager();
-    $book = new static();
+    $book = new Product();
 
     $isbn10 = $gbook->getIsbn10();
     if ($isbn10) {
@@ -415,11 +449,14 @@ class Product extends AppModel
       $book->barcodes[] = $issn_entity;
     }
 
-    $book->name          = $gbook->getTitle();
-    $book->description   = $gbook->getDescription();
-    $book->short_desc    = '';
-    $book->price         = $gbook->getListPrice() ?: 0.0;
-    $book->created_at = new \DateTime("now");
+    $book->name        = $gbook->getTitle();
+    $book->description = $gbook->getDescription();
+    $book->short_desc  = '';
+    $book->price       = $gbook->getListPrice() ?: 0.0;
+    $book->created_at  = new \DateTime("now");
+    $image             = new Image($book, $gbook->getImage(), Image::TYPE_REMOTE);
+    $book->images[]    = $image;
+    $em->persist($image);
 
     return $book;
   }

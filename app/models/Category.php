@@ -48,6 +48,31 @@ class Category extends AppModel
     });
   }
 
+  public function migrateTo(Category $alt)
+  {
+    $em = self::getEntityManager();
+    $products = $this->products;
+
+    foreach ($products as $product) {
+      $product->category = $alt;
+      $em->persist($product);
+    }
+
+    $em->flush();
+  }
+
+  /**
+   * @return array All categories exclude this
+   */
+  public function findAllOthers()
+  {
+    $em = self::getEntityManager();
+    $query = $em->createQuery('SELECT c FROM App\Models\Category c WHERE c.id != :cat_id');
+    $query->setParameter('cat_id', $this->id);
+
+    return $query->getResult();
+  }
+
   public static function create($params) 
   {
     $em = self::getEntityManager();

@@ -1,0 +1,48 @@
+<table>
+  <tr>
+    <form action="{{ webpath('Admin::ProductController', 'uploadPicture', [product.id]) }}" method="post" t>
+
+      <td>
+        <input type="file" name="picture" />
+      </td>
+      <td>
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </td>
+
+    </form>
+  </tr>
+</table>
+
+<table class="table">
+  <thead>
+    <th colspan=2>Image</th>
+    <th style='width: 15%'>Uploaded at</th>
+    <th style='width: 12%'>Action</th>
+  </thead>
+
+  {% for image in images %}
+  <tr>
+    <td><img src="{{ image.getUrl }}" alt="" style="width: 100px"></td>
+    <td>
+      <b>Source: </b> {{ image.src }}
+      <br>
+      <b>Type</b>: {{ image.type }}
+      <br>
+      <b>Width</b>: {{ image.width }}px
+      <br>
+      <b>Height</b>: {{ image.height }}px
+    </td>
+    <td>{{ image.uploaded_at.format("d-m-Y") }}</td>
+    <td>
+        <a href="{{ webpath('Admin::ImageController', 'delete', [image.id]) }}">
+          <span class="fa fa-stack">
+              <i class="fa fa-square-o fa-stack-2x"></i>
+              <i class="fa fa-trash fa-stack-1x"></i>
+          </span>
+        </a>
+    </td>
+  </tr>
+  {% endfor %}
+
+  </table>
+

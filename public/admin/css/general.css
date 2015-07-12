@@ -40,8 +40,10 @@ main #MainContent {
 }
 
 #ProductForm h3 {
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin: 0;
+  margin-left: 10px;
+  line-height: 34px;
+  display:inline-block;
 }
 
 #ProductForm .tab-pane {

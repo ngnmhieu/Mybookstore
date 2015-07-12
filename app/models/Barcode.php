@@ -57,8 +57,8 @@ class Barcode extends AppModel
       }), 'Barcode type must be one of those: ', implode(', ', self::$BARCODE_TYPES));
 
       $vm->register('barcode', new FunctionValidator(function() {
-        return empty(Barcode::findOneBy(['type' => $this->type, 'value' => $this->value]));
-      }), 'There is a duplicated barcode of type '.$this->type.' with the value '.$this->value);
+        return empty(Barcode::findDuplicate($this->type, $this->value, $this->product));
+      }), sprintf('There is a duplicated barcode of type %s with the value %s - Product: %s', $this->type, $this->value, $this->product->name));
 
       $required_length = 0;
       switch ($this->type) {

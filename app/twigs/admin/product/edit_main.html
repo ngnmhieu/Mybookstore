@@ -1,0 +1,10 @@
+{% extends 'admin/product/edit.html' %}
+
+{% block form %}
+  <form action="{{ webpath('Admin::ProductController','update', [product.id]) }}" method="post">
+    <a href="{{ webpath('Admin::ProductController','delete', [product.id]) }}" class="btn btn-danger" style="float:right;;margin: 0 0 10px 5px"><span class="fa fa-trash"></span> Delete</a>
+    <button type="submit" class="btn btn-primary" style="float:right; margin-bottom: 10px"><span class="fa fa-check"></span> Save</button>
+
+    {% include('admin/product/_maininfo_form.html') %}
+</form>
+{% endblock %}

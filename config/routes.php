@@ -27,12 +27,18 @@ $r->get('/admin/product/','App\Admin\Controllers\ProductController','index');
 $r->get('/admin/product/([0-9]+)','App\Admin\Controllers\ProductController','show');
 $r->get('/admin/product/add','App\Admin\Controllers\ProductController','add');
 $r->get('/admin/product/([0-9]+)/edit','App\Admin\Controllers\ProductController','edit');
+$r->get('/admin/product/([0-9]+)/edit/pictures','App\Admin\Controllers\ProductController','editPictures');
+$r->get('/admin/product/([0-9]+)/edit/authors','App\Admin\Controllers\ProductController','editAuthors');
+$r->post('/admin/product/([0-9]+)/pictures','App\Admin\Controllers\ProductController','uploadPicture');
+$r->post('/admin/product/([0-9]+)/authors','App\Admin\Controllers\ProductController','addAuthor');
+$r->get('/admin/product/(.+)/authors/(.+)/delete','App\Admin\Controllers\ProductController','removeAuthor');
 $r->get('/admin/product/([0-9]+)/delete','App\Admin\Controllers\ProductController','delete');
 $r->post('/admin/product/','App\Admin\Controllers\ProductController','create');
 $r->post('/admin/product/([0-9]+)','App\Admin\Controllers\ProductController','update');
 $r->delete('/admin/product/([0-9]+)/delete','App\Admin\Controllers\ProductController','delete');
 $r->get('/admin/product/googlebook/search','App\Admin\Controllers\ProductController','searchGoogleBook');
 $r->get('/admin/product/googlebook/(.+)/add','App\Admin\Controllers\ProductController','addFromGoogle');
+$r->get('/admin/image/(.+)/delete','App\Admin\Controllers\ImageController','delete');
 
 /** Admin\Author **/
 $r->get('/admin/author/','App\Admin\Controllers\AuthorController','index');
@@ -52,6 +58,7 @@ $r->post('/admin/category/','App\Admin\Controllers\CategoryController','create')
 $r->post('/admin/category/([0-9]+)','App\Admin\Controllers\CategoryController','update');
 $r->get('/admin/category/([0-9]+)/delete','App\Admin\Controllers\CategoryController','delete');
 $r->post('/admin/category/([0-9]+)/delete','App\Admin\Controllers\CategoryController','doDelete');
+$r->post('/admin/category/([0-9]+)/migrate','App\Admin\Controllers\CategoryController','migrate');
 
 /** User **/
 $r->get('/user/register','App\Store\Controllers\UserController','register');

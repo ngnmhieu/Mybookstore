@@ -5,11 +5,14 @@ use Markzero\Mvc\View\TwigView;
 use App\Libraries\GoogleBook\BookRequest;
 use App\Libraries\GoogleBook\BookRequestParameter;
 use App\Models\Product;
+use App\Models\Image;
+use App\Models\Author;
 use App\Models\Category;
 use App\Controllers\ApplicationController;
 use Markzero\Auth\Exception\AuthenticationFailedException;
 use Markzero\Auth\Exception\ActionNotAuthorizedException;
 use Markzero\Http\Exception\ResourceNotFoundException;
+use Markzero\Http\Exception\DuplicateResourceException;
 use Markzero\Validation\Exception\ValidationException;
 
 class ProductController extends ApplicationController 
@@ -216,30 +219,149 @@ class ProductController extends ApplicationController
 
   public function edit($id) 
   {
-    try {
+    $this->respondTo('html', function() use($id) {
+
       $product = Product::find($id);
 
-      $this->respondTo('html', function() use($product) {
-
-        $categories = Category::findAll();
-        $session    = $this->getSession();
-        $inputs     = $session->getOldInputBag();
-        $errors     = $session->getErrorBag();
-        $error_msgs = array_flatten($errors->all());
-
-        $data = compact('error_msgs', 'product','inputs', 'errors', 'categories');
-        $data['page_title'] = "$product->name - Edit";
-        $this->render(new TwigView('admin/product/edit.html', $data));
-      });
-
-    } catch(ResourceNotFoundException $e) {
-
-      $this->respondTo('html', function() use($id) {
+      if ($product == null) 
+      {
         $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
-      });
+        return;
+      }
 
-    }
-    
+      $categories = Category::findAll();
+      $session    = $this->getSession();
+      $inputs     = $session->getOldInputBag();
+      $errors     = $session->getErrorBag();
+      $error_msgs = array_flatten($errors->all());
+
+      $data = compact('error_msgs', 'product','inputs', 'errors', 'categories');
+
+      $data['page_title'] = "$product->name - Edit";
+      $data['method']     = 'edit';
+
+      $this->render(new TwigView('admin/product/edit_main.html', $data));
+    });
+  }
+
+  public function editPictures($id)
+  {
+    $this->respondTo('html', function() use($id) {
+
+      $product = Product::find($id);
+
+      if ($product == null) 
+      {
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
+        return;
+      }
+
+      $flash  = $this->getSession()->getFlashBag();
+      $errors = $flash->get('errors');
+      $images = $product->images;
+
+      $data = compact('product', 'errors', 'images');
+
+      $data['method'] = 'editPictures';
+
+      $data['page_title'] = "$product->name - Edit";
+
+      $this->render(new TwigView('admin/product/edit_pictures.html', $data));
+    });
+  }
+
+  public function editAuthors($id)
+  {
+    $this->respondTo('html', function() use($id) {
+
+      $product = Product::find($id);
+
+      if ($product == null)
+      {
+        $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'index');
+        return;
+      }
+
+      $flash       = $this->getSession()->getFlashBag();
+      $errors      = $flash->get('errors');
+      $all_authors = Author::findAll();
+
+      $data = [
+        'method'      => 'editAuthors',
+        'page_title'  => sprintf("%s - Edit", $product->name),
+        'product'     => $product,
+        'all_authors' => $all_authors,
+        'errors'      => $errors
+      ];
+
+      $this->render(new TwigView('admin/product/edit_authors.html', $data));
+    });
+  }
+
+  public function addAuthor($product_id)
+  {
+    $this->respondTo('html', function() use($product_id) {
+
+      $response = $this->getResponse();
+      $product  = Product::find($product_id);
+      $flash    = $this->getSession()->getFlashBag();
+
+      if ($product == null) {
+        $flash->add('errors', "Product #$product_id not found");
+        $response->redirect('App\Admin\Controllers\ProductController', 'index');
+        return;
+      }
+
+      $params = $this->getRequest()->getParams();
+      $author_id = $params->get('author_id');
+      $author    = Author::find($author_id);
+      if ($author == null) {
+        $flash->add('errors', "Author #$author_id not found");
+        $response->redirect('App\Admin\Controllers\ProductController', 'editAuthors', [$product_id]);
+        return;
+      }
+      
+      try {
+
+        $product->addAuthor($author);
+        $response->redirect('App\Admin\Controllers\ProductController', 'editAuthors', [$product_id]);
+
+      } catch(DuplicateResourceException $e) {
+
+        $flash->add('errors', sprintf("Duplicate Author #%s - %s", $author_id, $author->name));
+        $response->redirect('App\Admin\Controllers\ProductController', 'editAuthors', [$product_id]);
+      }
+
+    });
+  }
+
+  public function removeAuthor($product_id, $author_id)
+  {
+    $this->respondTo('html', function() use($product_id, $author_id) {
+
+      $response = $this->getResponse();
+      $product  = Product::find($product_id);
+      $flash    = $this->getSession()->getFlashBag();
+
+      if ($product == null) {
+        $flash->add('errors', "Product #$product_id not found");
+        $response->redirect('App\Admin\Controllers\ProductController', 'index');
+        return;
+      }
+
+      $author = Author::find($author_id);
+      if ($author == null) {
+        $flash->add('errors', "Author #$author_id not found");
+        $response->redirect('App\Admin\Controllers\ProductController', 'editAuthors', [$product_id]);
+        return;
+      }
+
+      if (!$product->removeAuthor($author)) {
+        $flash->add('errors', "Author #$author_id not associated with this book");
+      }
+      $response->redirect('App\Admin\Controllers\ProductController', 'editAuthors', [$product_id]);
+    });
+
   }
 
   public function update($id) 
@@ -264,6 +386,7 @@ class ProductController extends ApplicationController
         $this->getResponse()->redirect('App\Admin\Controllers\ProductController', 'edit', [$id]);
       });
 
+
     } catch(ValidationException $e) {
 
       $flash->set('errors', $e->getErrors());
@@ -274,6 +397,38 @@ class ProductController extends ApplicationController
       });
 
     }
+  }
+
+  public function uploadPicture($id)
+  {
+      $this->respondTo('html', function() use($id) {
+
+        $response  = $this->getResponse();
+        $flash     = $this->getSession()->getFlashBag();
+        $files_bag = $this->getRequest()->getFiles();
+        $picfile   = $files_bag->get('picture');
+
+        if ($picfile == null) {
+
+          $flash->add('errors', 'no file uploaded');
+          $response->redirect('App\Admin\Controllers\ProductController', 'editPictures', [$id]);
+          return;
+        }
+
+        $product = Product::find($id);
+
+        if ($product == null) {
+
+          $flash->add('errors', "Product #$id cannot be found");
+          $response->redirect('App\Admin\Controllers\ProductController', 'index');
+          return;
+        }
+
+        Image::saveUploadedImage($product, $picfile);
+
+        $response->redirect('App\Admin\Controllers\ProductController', 'editPictures', [$id]);
+
+      });
   }
 
   function delete($id) 

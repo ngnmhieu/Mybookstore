@@ -1,30 +1,39 @@
 {% include('admin/common/header.html') %}
 
 <div id="ProductForm">
-  <a class="btn btn-default" onclick="history.back(); return false;"><span class="fa fa-reply"></span> Return</a>
-  <h3>Update Product</h3>
 
-  <form action="{{ webpath('Admin::ProductController','update', [product.id]) }}" method="post">
-    
+  <div style="margin-bottom: 20px;">
+    <a class="btn btn-default" onclick="history.back(); return false;"><span class="fa fa-reply"></span> Back</a>
+    <h3>Edit Product</h3>
+  </div>
+
     <div role="tabpanel">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="','maininfo" aria-controls="maininfo" role="tab" data-toggle="tab">Product Information</a></li>
+        <li role="presentation" class="{{ method == 'edit' ? 'active' : ''}} ">
+          <a href="{{ webpath('Admin::ProductController', 'edit', [product.id]) }}">Basic Information</a>
+        </li>
+
+        <li role="presentation" class="{{ method == 'editPictures' ? 'active' : ''}}">
+          <a href="{{ webpath('Admin::ProductController', 'editPictures', [product.id]) }}" role="tab">Pictures</a>
+        </li>
+
+        <li role="presentation" class="{{ method == 'editAuthors' ? 'active' : ''}}">
+          <a href="{{ webpath('Admin::ProductController', 'editAuthors', [product.id]) }}" role="tab">Authors</a>
+        </li>
       </ul>
 
       <!-- Tab panes -->
       <div class="tab-content">
 
         <div role="tabpanel" class="tab-pane active" id="maininfo">
-          {% include('admin/product/_maininfo_form.html') %}
+          {% block form %}{% endblock%} 
+    
         </div>
 
       </div>
     </div>
 
-    <input type="submit" class="btn btn-primary" name="submit" value="Save">
-
-  </form>
 
 </div>
 

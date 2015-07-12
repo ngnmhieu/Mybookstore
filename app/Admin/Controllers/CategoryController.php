@@ -121,10 +121,11 @@ class CategoryController extends ApplicationController
       $flash    = $this->getSession()->getFlashBag();
 
       try {
-        $cat      = Category::find($id);
-        $products = $cat->products;
+        $cat        = Category::find($id);
+        $categories = $cat->findAllOthers();
+        $products   = $cat->products;
 
-        $this->render(new TwigView('admin/category/delete.html', compact('cat', 'products')));
+        $this->render(new TwigView('admin/category/delete.html', compact('cat', 'products', 'categories')));
       } catch (ResourceNotFoundException $e) {
 
         $flash->add('errors', "Product #$id not found");
@@ -133,6 +134,35 @@ class CategoryController extends ApplicationController
       }
 
     });
+  }
+
+  /**
+   * Migrates products in a category to another
+   */
+  function migrate($id)
+  {
+    $this->respondTo('html', function() use($id) {
+
+      $response   = $this->getResponse();
+      $flash      = $this->getSession()->getFlashBag();
+      $params     = $this->getRequest()->getParams();
+      $alt_cat_id = $params->get('alt_category_id');
+
+      $cat     = Category::find($id);
+      $alt_cat = Category::find($alt_cat_id);
+
+      if ($cat == null || $alt_cat == null) {
+
+        $flash->add('errors', "Category #$id or #$cat_id not found");
+        $response->redirect('App\Admin\Controllers\CategoryController', 'delete', [$id]);
+        return;
+      }
+
+      $cat->migrateTo($alt_cat);
+
+      $response->redirect('App\Admin\Controllers\CategoryController', 'delete', [$id]);
+    });
+     
   }
 
   function doDelete($id) 

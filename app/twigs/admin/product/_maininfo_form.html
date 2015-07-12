@@ -87,6 +87,19 @@
   </tr>
 </table>
 
+{% if (product.images|length != 0) %}
+  {% for image in product.images %}
+    <input type="hidden" name="product[remote_images][]" value="{{ image.src }}" />
+  {% endfor %}
+{% endif %}
+
+{% set images = inputs.get('product[remote_images]', null, true) %}
+{% if (images) %}
+  {% for image in images %}
+    <input type="hidden" name="product[remote_images][]" value="{{ image }}" />
+  {% endfor %}
+{% endif %}
+
 {% if errors.count != 0 %}
   {% include('admin/common/js_enable_tooltip.html') %}
 {% endif %}
