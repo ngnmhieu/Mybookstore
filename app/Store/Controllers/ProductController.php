@@ -19,7 +19,7 @@ class ProductController extends ApplicationController
 
   public function getUserReplacements()
   {
-    $replacements = array();
+    $replacements = [];
 
     $user_session = UserSession::getInstance();
 
@@ -33,17 +33,17 @@ class ProductController extends ApplicationController
 
   public function index() 
   {
-    $products = Product::findAll();
-    $latests  = Product::getLatest();
 
-    $this->respondTo('html', function() use ($products, $latests) {
+    $this->respondTo('html', function() {
+
+      $latests = Product::getLatest(12);
 
       $data = [
-        'products' => $products,
         'latests'  => $latests
       ];
 
       $user_replacements = $this->getUserReplacements();
+
       $data = array_merge($user_replacements, $data);
 
       $this->render(new TwigView('product/index.html', $data));
@@ -58,10 +58,10 @@ class ProductController extends ApplicationController
 
       $this->respondTo('html', function() use($product, $ratings, $top_related) {
         $data['product'] = $product;
-        $data['ratings'] = array();
+        $data['ratings'] = [];
         $data['top_related'] = $top_related;
 
-        $count = array();
+        $count = [];
         foreach (Rating::$VALID_VALUES as $value) {
           $count[$value] = 0;
         }

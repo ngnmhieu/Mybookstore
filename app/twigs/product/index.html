@@ -1,16 +1,35 @@
 {{ include('common/header.html') }}
+
 <main>
-  <div>
-    <h3>Latest books</h3>
+
+<section id="Latest">
+
+  <div class="section-header">
+    <h3 class="section-title">Latest books</h3>
     <hr class="underline" />
   </div>
 
-  <div class="row" id="ProductList">
-      {% for product in products %}
-      <div class="col-xs-2">
-      <a href="{{ webpath('Store::ProductController','show', [product.id]) }}">{{ product.name }}</a> {{product.price}} &euro;
+  <div class="row product-list">
+
+    {% for product in latests %}
+    <div class="col-xs-2 product-list-cell">
+
+      <div class="image-container">
+        {% set product_url = webpath('Store::ProductController','show', [product.id]) %}
+        <a href="{{ product_url }}"><img src="{{ product.thumb.url }}" alt="{{ product.name }}" /></a>
       </div>
-      {% endfor %}
+
+      <div class="product-price">{{product.price | number_format(2, ',', '.') }} &euro;</div>
+
+      <div class="product-name-container">
+        <a class="product-name" href="{{ product_url }}">{{ product.name }}</a>
+      </div>
+    </div>
+    {% endfor %}
   </div>
+
+</section>
+
 </main>
+
 {{ include('common/footer.html') }}

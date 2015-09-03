@@ -15,6 +15,37 @@ hr.underline {
   background: #efefef;
 }
 
-#ProductList ul {
+.product-list ul {
   list-style: none;
+}
+
+.product-list .product-list-cell {
+  margin-top: 30px;
+  height: 250px;
+}
+.product-list .image-container {
+  text-align: center;
+  height: 200px;
+}
+.product-list .image-container img {
+  height: 100%;
+}
+.product-list .product-price {
+  background: #eee;
+  padding: 5px;
+  border: 1px solid #ddd;
+  min-width: 60px;
+  text-align: right;
+  position: absolute;
+  top: 20px;
+  right: 0;
+}
+
+.product-list .product-name-container {
+  margin-top: 5px;
+  text-align: center;
+}
+
+.product-list .product-name {
+  color: #333;
 }

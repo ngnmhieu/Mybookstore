@@ -1,7 +1,11 @@
 <?php
-namespace App\Models; 
+namespace App\Admin\Models; 
 
 use Markzero\Mvc\AppModel;
+
+use App\Models\Rating;
+
+
 use App\Libraries\GoogleBook\Book;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -19,7 +23,7 @@ use Markzero\Http\Exception\DuplicateResourceException;
 class Product extends AppModel 
 {
   protected static $readable = array('id');
-  protected static $accessible = ['name', 'price', 'short_desc', 'description', 'thumb', 'ratings', 'category', 'barcodes', 'authors', 'images', 'updated_at', 'created_at'];
+  protected static $accessible = ['name', 'price', 'short_desc', 'description', 'ratings', 'category', 'barcodes', 'authors', 'images', 'updated_at', 'created_at'];
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
@@ -75,11 +79,6 @@ class Product extends AppModel
    * @OneToMany(targetEntity="Image", mappedBy="product", cascade={"persist"})
    */
   protected $images;
-
-  /**
-   * @var Image thumbnail
-   */
-  protected $thumb;
 
   public function __construct() 
   {
@@ -138,21 +137,6 @@ class Product extends AppModel
     }
 
     return null;
-  }
-
-  /**
-   * @return Image|null thumbnail of the book
-   *         null if no image is found
-   */
-  public function getThumb()
-  {
-    if ($this->images->isEmpty())
-      return null;
-
-    if ($this->thumb == null)
-      $this->thumb = $this->images->first();
-
-    return $this->thumb;
   }
 
   protected function _validate()
