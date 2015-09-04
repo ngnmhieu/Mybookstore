@@ -3,21 +3,17 @@
 namespace App\Admin\Controllers;
 
 use App\Controllers\ApplicationController;
-use App\Models\Author;
+use App\Admin\Models\Author;
 use Markzero\Mvc\View\TwigView;
 use Markzero\Http\Response;
 use Markzero\Validation\Exception\ValidationException;
 use Markzero\Http\Exception\ResourceNotFoundException;
 
-/**
- * 
- */
 class AuthorController extends ApplicationController
 {
   
   function index() 
   {
-
     $this->respondTo('html', function() {
 
       $authors = Author::findAll();
@@ -32,7 +28,6 @@ class AuthorController extends ApplicationController
 
   function show($id) 
   {
-
     $this->respondTo('html', function() use($id) {
       
       $author = Author::find($id);
@@ -139,7 +134,6 @@ class AuthorController extends ApplicationController
 
   function delete($id) 
   {
-
     $this->respondTo('html', function() use($id) {
 
       $response = $this->getResponse();

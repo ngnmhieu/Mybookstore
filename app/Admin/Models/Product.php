@@ -2,10 +2,6 @@
 namespace App\Admin\Models; 
 
 use Markzero\Mvc\AppModel;
-
-use App\Models\Rating;
-
-
 use App\Libraries\GoogleBook\Book;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -20,66 +16,8 @@ use Markzero\Http\Exception\DuplicateResourceException;
  * @Entity 
  * @Table(name="products")
  **/
-class Product extends AppModel 
+class Product extends \App\Models\Product 
 {
-  protected static $readable = array('id');
-  protected static $accessible = ['name', 'price', 'short_desc', 'description', 'ratings', 'category', 'barcodes', 'authors', 'images', 'updated_at', 'created_at'];
-
-  /** @Id @Column(type="integer") @GeneratedValue **/
-  protected $id;
-
-  /** @Column(type="string") **/
-  protected $name;
-
-  /** @Column(type="float") **/
-  protected $price;
-
-  /** @Column(type="text") **/
-  protected $short_desc;
-
-  /** @Column(type="text") **/
-  protected $description;
-
-  /**
-   * @OneToMany(targetEntity="Rating", mappedBy="product")
-   */
-  protected $ratings;
-
-  /**
-   * @ManyToMany(targetEntity="User", mappedBy="products")
-   */
-  protected $users;
-
-  /**
-   * @ManyToOne(targetEntity="Category", inversedBy="products")
-   */
-  protected $category;
-
-  /**
-   * @OneToMany(targetEntity="Barcode", mappedBy="product", cascade={"persist"})
-   */
-  protected $barcodes;
-
-  /**
-   * @Column(type="datetime");
-   */
-  protected $created_at;
-
-  /**
-   * @Column(type="datetime");
-   */
-  protected $updated_at;
-
-  /**
-   * @ManyToMany(targetEntity="Author", mappedBy="books", cascade={"remove"})
-   */
-  protected $authors;
-
-  /**
-   * @OneToMany(targetEntity="Image", mappedBy="product", cascade={"persist"})
-   */
-  protected $images;
-
   public function __construct() 
   {
     $this->ratings  = new ArrayCollection();
@@ -287,7 +225,7 @@ class Product extends AppModel
    * @throw Markzero\Validation\Exception\ValidationException
    * @return Product
    */
-  static function create(ParameterBag $params) 
+  public static function create(ParameterBag $params) 
   {
     $em = self::getEntityManager();
 
@@ -384,7 +322,7 @@ class Product extends AppModel
    * @throw Markzero\Http\Exception\ResourceNotFoundException
    *        Markzero\Validation\Exception\ValidationException
    */
-  static function update($id, ParameterBag $params)
+  public static function update($id, ParameterBag $params)
   {
     $em = self::getEntityManager();
 
@@ -422,16 +360,7 @@ class Product extends AppModel
     return $product;
   }
 
-  /**
-   * Return latest books
-   * @param int $count number of books to return
-   */
-  static function getLatest($count = null)
-  {
-    return static::findBy([], ['id' => 'desc'], $count ?: 20);
-  }
-
-  static function newFromGoogleBook(Book $gbook) 
+  public static function newFromGoogleBook(Book $gbook) 
   {
     $em = self::getEntityManager();
     $book = new Product();
@@ -469,7 +398,7 @@ class Product extends AppModel
    * @param App\Library\GoogleBook\Book
    * @return Product
    */
-  static function createFromGoogleBook(Book $gbook) 
+  public static function createFromGoogleBook(Book $gbook) 
   {
     $book = self::newFromGoogleBook($gbook);
 
@@ -488,107 +417,13 @@ class Product extends AppModel
   {
     $em = self::getEntityManager();
     $query = $em->createQuery("
-      SELECT p FROM App\Models\Product p 
+      SELECT p FROM App\Admin\Models\Product p 
       JOIN p.barcodes b
       WHERE b.value IN (:barcodes)");
     $query->setParameter('barcodes', $barcodes, \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
     $result = $query->getResult();
 
     return !empty($result) ? array_shift($result) : null;
-  }
-
-  /**
-   * @return Rating | null
-   */
-  function ratingByUser($user)
-  {
-    if ($user === null)
-      return null;
-    $rating = Rating::findOneBy(array('user' => $user, 'product' => $this));
-
-    return $rating;
-  }
-
-  function meanRating()
-  {
-    $ratings = Rating::findBy(array('product' => $this));
-    $rating_sum = array_reduce($ratings, function($sum, $rating) {
-      return $sum + $rating->value; 
-    });
-
-    $mean = count($ratings) > 0 ? $rating_sum / count($ratings) : 0;
-
-    return $mean;
-  }
-
-  function positiveRatingPercent()
-  {
-    $ratings = Rating::findBy(array('product' => $this));
-
-    $positive_ratings = array_filter($ratings, function($rating) {
-      return ((int) $rating->value) >= 4; 
-    });
-
-    if (!count($ratings)) {
-      return 0;
-    }
-
-    return 100 * count($positive_ratings) / count($ratings);
-  }
-
-  /**
-   * @param int $num top $num related Products
-   */
-  function getTopRelated($num)
-  {
-    $em = self::getEntityManager();
-
-    // products other than this
-    $query = $em->createQuery('SELECT b FROM App\Models\Product b WHERE b.id != :product_id');
-    $query->setParameter(':product_id', $this->id);
-    $all_products = $query->getResult();
-
-    // users rated this product
-    $query = $em->createQuery('
-      SELECT u.id FROM App\Models\User u JOIN u.products b 
-      WHERE b.id = :product_id GROUP BY u
-    ');
-    $query->setParameter(':product_id', $this->id);
-    $uids_this = $query->getResult();
-    $uids_this = array_flatten($uids_this);
-
-    // calculate
-    $scores = array();
-    $products_map = array();
-    foreach($all_products as $product) {
-      $query = $em->createQuery('
-        SELECT u.id FROM App\Models\User u JOIN u.products b 
-        WHERE b.id = :product_id GROUP BY u
-      ');
-      $query->setParameter(':product_id', $product->id);
-      $uids_that = $query->getResult();
-      $uids_that = array_flatten($uids_that);
-
-      $uids_both = array_intersect($uids_that, $uids_this);
-      $scores[$product->id] = count($uids_this) ? count($uids_both) / count($uids_this) : 0;
-
-      // store for later access by id
-      $products_map[$product->id] = $product;
-    }
-  
-    // sort with max on top
-    arsort($scores);
-
-    // get the products
-    $top_related_products = array();
-    $i = 0;
-    foreach ($scores as $product_id => $score) {
-      if ($i++ >= $num)
-        break;
-      $top_related_products[] = $products_map[$product_id];
-    }
-
-    return $top_related_products;
   }
 
 }

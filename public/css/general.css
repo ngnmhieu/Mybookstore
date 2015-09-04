@@ -49,3 +49,67 @@ hr.underline {
 .product-list .product-name {
   color: #333;
 }
+
+#Product #Left .image-container img {
+  width: 100%;
+}
+
+#Product #Right .author-list {
+  margin-left: 5px;
+}
+
+#Product #Right .product-name {
+  margin: 0;
+}
+
+#Product #Right .product-price {
+  font-size: 1.5em;
+  margin: 5px 0;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 20px 0;
+  width: 160px;
+}
+
+#Product #Right .product-info {
+  margin-top: 20px;
+}
+
+#Product #Right .product-info .product-details {
+  margin-top: 8px;
+  padding: 0;
+}
+
+#Product #Reviews {
+  margin-top: 50px;
+}
+
+.star {
+  font-size: 20px;
+}
+.star.active {
+  color: #ffce00;
+}
+
+#LoginForm table td ,
+#RegisterForm table td {
+  padding: 5px;
+}
+
+#PageFooter {
+  height: 100px;
+  margin-top: 70px;
+  background: #e7e7e7;
+  border-top: 1px solid #cfcfcf;
+}
+
+#PageFooter .menu-column {
+  list-style: none;
+  padding-top: 30px;
+}
+
+#PageFooter .menu-column li {
+  margin: 0px 20px;
+  display: inline-block;
+}

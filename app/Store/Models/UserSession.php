@@ -1,5 +1,5 @@
 <?php
-namespace App\Models; 
+namespace App\Store\Models; 
 
 use Markzero\App;
 use Markzero\Mvc\AppModel;

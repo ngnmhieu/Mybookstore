@@ -2,7 +2,7 @@
 namespace App\Admin\Controllers;
 
 use App\Controllers\ApplicationController;
-use App\Models\Category;
+use App\Admin\Models\Category;
 use Markzero\Mvc\View\TwigView;
 use Markzero\Http\Response;
 use Markzero\Validation\Exception\ValidationException;

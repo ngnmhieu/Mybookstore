@@ -61,7 +61,6 @@ $r->post('/admin/category/([0-9]+)/delete','App\Admin\Controllers\CategoryContro
 $r->post('/admin/category/([0-9]+)/migrate','App\Admin\Controllers\CategoryController','migrate');
 
 /** User **/
-$r->get('/user/register','App\Store\Controllers\UserController','register');
 $r->post('/user/','App\Store\Controllers\UserController','create');
 
 /** Session **/

@@ -1,7 +1,7 @@
 <?php
 namespace App\Auth\Controllers;
 
-use App\Models\UserSession; 
+use App\Store\Models\UserSession; 
 use Markzero\Mvc\View;
 use App\Controllers\ApplicationController;
 use Markzero\Auth\Exception\AuthenticationFailedException;

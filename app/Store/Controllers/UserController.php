@@ -1,4 +1,5 @@
 <?php
+namespace App\Store\Controllers;
 
 use App\Models\UserSession; 
 use App\Models\User; 
@@ -9,13 +10,6 @@ use Markzero\Validation\Exception\ValidationException;
 
 class UserController extends ApplicationController 
 {
-
-  function register() 
-  {
-    $this->respondTo('html', function() {
-      $this->render(new View\TwigView('user/register.html'));
-    });
-  }
 
   function create() 
   {
@@ -31,7 +25,7 @@ class UserController extends ApplicationController
     } catch(ValidationException $e) {
 
       $this->respondTo('html', function() use($e) {
-        $this->getResponse()->redirect('App\Store\Controllers\UserController','register');
+        $this->getResponse()->redirect('App\Auth\Controllers\SessionController','signIn');
       });
 
     }

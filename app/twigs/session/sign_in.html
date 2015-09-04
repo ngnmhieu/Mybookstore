@@ -1,19 +1,57 @@
 {% include('common/header.html') %}
 
-<h1>Sign In</h1>
-<form action="{{ webpath('Auth::SessionController','create') }}" method="post">
-  <div>
-    <label for="email">Email: </label>
-    <input type="text" name="user[email]" id="email">
+<div class="row">
+
+  <div id="LoginForm" class="col-xs-6">
+    <form action="{{ webpath('Auth::SessionController','create') }}" method="post">
+      <h3>Sign In</h3>
+
+      <table style="width: 70%" class="text-right">
+        <tr>
+          <td><label for="email">Email: </label></td>
+          <td><input type="text" name="user[email]" id="email" class="form-control"></td>
+        </tr>
+
+        <tr>
+          <td><label for="password">Password: </label></td>
+          <td><input type="password" name="user[password]" id="password" class="form-control"></td>
+        </tr>
+        <tr>
+          <td colspan=2><input type="submit" name="submit" value="Sign In" class="btn btn-primary pull-right"></td>
+        </tr>
+
+      </table>
+    </form>
   </div>
 
-  <div>
-    <label for="password">Password: </label>
-    <input type="password" name="user[password]" id="password">
-  </div>
+  <div id="RegisterForm" class="col-xs-6">
+    <form action="{{ webpath('Store::UserController','create') }}" method="post">
 
-  <br />
-  <input type="submit" name="submit" value="Sign In">
+      <h3>Register</h3>
+
+      <table style="width: 70%" class="text-right">
+        <tr>
+          <td><label for="email">Email: </label></td>
+          <td><input type="text" name="email" id="email" class="form-control"></td>
+        </tr>
+
+        <tr>
+          <td><label for="name">Name: </label></td>
+          <td><input type="text" name="name" id="name" class="form-control"></td>
+        </tr>
+
+        <tr>
+          <td><label for="password">Password: </label></td>
+          <td><input type="password" name="password" id="password" class="form-control"></td>
+        </tr>
+        <tr>
+          <td colspan=2><input type="submit" name="submit" value="Register" class="btn btn-primary pull-right"></td>
+        </tr>
+
+      </table>
+    </form>
+  </div>
+</div>
 </form>
 
 {% include('common/footer.html') %}

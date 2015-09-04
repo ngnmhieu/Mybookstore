@@ -36,8 +36,7 @@
 
                 {% else %}
 
-                <li><a href="{{ webpath('Store::UserController','register') }}">Register</a></li>
-                <li><a href="{{ webpath('Auth::SessionController','signIn') }}">Sign In</a></li>
+                <li><a href="{{ webpath('Auth::SessionController','signIn') }}"><span class="fa fa-user"></span> Sign In</a></li>
 
                 {% endif %}
               </ul>

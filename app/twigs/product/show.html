@@ -1,23 +1,134 @@
 {% include('common/header.html') %}
 
-<h1>{{ product.name }}</h1>
+<div id="Product">
+  <div class="row">
 
-<h3>People rate this product, also rate these products: </h3>
-<ul>
-  {% for product in top_related %}
-  <li>{{ product.name }}</li>
-  {% endfor %}
-</ul>
+    <section id="Left" class="col-xs-3">
+      <div class="image-container">
+        <img src="{{ product.thumb.url }}" alt="" />
+      </div>
+    </section>
 
-<h3>Ratings</h3>
+    <section id="Right" class="col-xs-9">
+      <h1 class="product-name">{{ product.name }}</h1>
+      {% set author_names = product.getAuthorNames %}
+      {% if not author_names is empty %}
+      <span class="author-list">by {{ author_names | join(', ') }}</span>
+      {% endif %}
+      <br />
+      {{ product.ratings | length }} Reviews
 
-<ul>
-  {% for rating in ratings %}
-  <li>{{ rating.value }} Stars: {{ rating.count }}</li>
-  {% endfor %}
-</ul>
+      {% if product.ratings | length > 0 %}
 
-[ <a href="{{ webpath('Store::ProductController','index') }}">Back to product list</a> ]
+        {% set stars = get_stars(product.meanRating) %}
+
+        {% for star in stars%}
+        <span class="star {{ star.active ? 'active' : 'inactive' }}">{{ star.value | raw }}</span>
+        {% endfor %}
+
+      {% endif %}
+      <hr />
+
+        <div class="product-info">
+
+          <div class="row">
+
+            <div class="col-xs-3 text-left">
+              <div class="product-price text-center">
+                {{ product.price | number_format(2,',','.') }} EUR
+              </div>
+
+              <div class="buy">
+                <div class="btn-group">
+                  <button class="btn btn-success"><span class="fa fa-shopping-cart fa-lg"></span></button>
+                  <button class="btn btn-success" style="padding-left: 22px; padding-right: 22px">Add to Cart</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xs-8">
+              <ul class="product-details">
+                {% for barcode in product.barcodes %}
+                <li>{{ barcode.type }}: {{ barcode.value }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+
+
+          </div>
+
+          <hr />
+
+          <p>{{ product.description }}</p>
+
+      </div>
+
+
+    </section>
+
+  </div>
+
+  <section style="margin-top: 50px;">
+    <h3>People rate this product, also rate these products: </h3>
+
+    <div class="row product-list">
+
+      {% for product in top_related %}
+      <div class="col-xs-2 product-list-cell">
+
+        <div class="image-container">
+          {% set product_url = webpath('Store::ProductController','show', [product.id]) %}
+          <a href="{{ product_url }}"><img src="{{ product.thumb.url }}" alt="{{ product.name }}" /></a>
+        </div>
+
+        <div class="product-price">{{product.price | number_format(2, ',', '.') }} &euro;</div>
+
+        <div class="product-name-container">
+          <a class="product-name" href="{{ product_url }}">{{ product.name }}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section id="Reviews">
+    <div class="row">
+      <div class="col-xs-6">
+         <h3 style="margin-top: 0">Reviews</h3>
+         {% for rating in product.ratings %}
+
+           {% set stars = get_stars(rating.value) %}
+
+           {{ rating.user.name }}
+
+           {% for star in stars%}
+           <span class="star {{ star.active ? 'active' : 'inactive' }}">{{ star.value | raw }}</span>
+           {% endfor %}
+
+           <p>{{ rating.content }}</p>
+
+         {% endfor %}
+      </div>
+
+      <div class="col-xs-6">
+        {% if is_signed_in %}
+        <form action="{{ webpath('Store::ProductController', 'rate', [product.id]) }}" method="post">
+          <b>Write your review:</b> 
+          <br />
+          Rating: 
+          {% for value in rating_scalar %}
+          <label for="rating_{{value}}">{{value}}</label>
+          <input type="radio" name="rating[value]" id="rating_{{value}}" value="{{value}}" /> &nbsp;
+          {% endfor %}
+          <textarea class="form-control" name="rating[content]" rows="3"></textarea>
+          <button type="submit" class="btn btn-default pull-right" style="margin-top: 5px;">Send</button>
+        </form>
+        {% endif %}
+      </div>
+
+    </div>
+  </section>
+</div>
 
 {% include('common/footer.html') %}
 

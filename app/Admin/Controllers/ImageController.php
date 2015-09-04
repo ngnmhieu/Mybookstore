@@ -2,7 +2,7 @@
 namespace App\Admin\Controllers;
 
 use App\Controllers\ApplicationController;
-use App\Models\Image;
+use App\Admin\Models\Image;
 
 class ImageController extends ApplicationController 
 {
