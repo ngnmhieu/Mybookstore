@@ -21,7 +21,11 @@ class SessionController extends ApplicationController
   function create() 
   {
     try {
-      UserSession::getInstance()->create($this->getRequest()->request);
+      $params   = $this->getRequest()->request;
+      $email    = $params->get('user[email]', null, true);
+      $password = $params->get('user[password]', null, true);
+
+      UserSession::signIn($email, $password);
 
       $this->respondTo('html', function() {
         $this->getResponse()->redirect('App\Store\Controllers\ProductController', 'index');
@@ -52,7 +56,7 @@ class SessionController extends ApplicationController
 
   function delete() 
   {
-    UserSession::getInstance()->destroy();
+    UserSession::signOut();
 
     $this->respondTo('html', function() {
       $this->getResponse()->redirect('App\Store\Controllers\ProductController', 'index');

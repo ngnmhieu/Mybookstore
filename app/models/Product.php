@@ -17,7 +17,7 @@ use Markzero\Http\Exception\DuplicateResourceException;
  **/
 abstract class Product extends AppModel
 {
-  protected static $readable = array('id');
+  protected static $readable = ['id'];
   protected static $accessible = ['name', 'price', 'short_desc', 'description', 'thumb', 'ratings', 'category', 'barcodes', 'authors', 'images', 'updated_at', 'created_at'];
 
   /** @Id @Column(type="integer") @GeneratedValue **/
