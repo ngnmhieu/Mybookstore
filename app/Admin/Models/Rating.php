@@ -17,6 +17,7 @@ class Rating extends \App\Models\Rating
     $vm = self::createValidationManager();
 
     $vm->register('value', new Validator\RequireValidator($this->value), 'Value of the rating is required');
+
     $vm->register('value', new Validator\FunctionValidator(function() {
       return in_array((int) $this->value, Rating::$VALID_VALUES);
     }), 'Rating value is invalid');

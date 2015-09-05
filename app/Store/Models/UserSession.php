@@ -170,9 +170,7 @@ class UserSession extends AppModel
    */
   public static function signIn($email, $password)
   {
-    $vm = new ValidationManager();
-
-    $vm->validate(function($vm) use($email, $password) {
+    ValidationManager::validate(function($vm) use($email, $password) {
 
       $vm->register('user.email', new Validator\EmailValidator($email));
       $vm->register('user.password', new Validator\RequireValidator($password), 'Password is required');
@@ -188,8 +186,6 @@ class UserSession extends AppModel
       self::signInWithUser($user);
     else
       throw new AuthenticationFailedException();
-
-    return self::getInstance();
   }
 
   /**

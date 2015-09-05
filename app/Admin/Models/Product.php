@@ -2,6 +2,7 @@
 namespace App\Admin\Models; 
 
 use Markzero\Mvc\AppModel;
+use Markzero\Validation\ValidationManager;
 use App\Libraries\GoogleBook\Book;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -131,9 +132,7 @@ class Product extends \App\Models\Product
    */
   private static function validateParams(ParameterBag $params, Product $product)
   {
-    $vm = self::createValidationManager();
-
-    $vm->validate(function($vm) use ($params, $product) {
+    ValidationManager::validate(function($vm) use ($params, $product) {
 
       $catid  = $params->get('product[category_id]', null, true);
       $name   = $params->get('product[name]', '', true) ;

@@ -2,6 +2,7 @@
 namespace App\Store\Models;
 
 use Markzero\Mvc\AppModel;
+use Markzero\Validation\ValidationManager;
 use Markzero\Validation\Validator\RequireValidator;
 use Markzero\Validation\Validator\FunctionValidator;
 use Doctrine\ORM\UnitOfWork;
@@ -25,9 +26,7 @@ class Barcode extends \App\Models\Barcode
 
   public function _validate()
   {
-    $vm = self::createValidationManager();
-
-    $vm->validate(function() use ($vm) {
+    ValidationManager::validate(function() use ($vm) {
 
       $vm->register('barcode_type', new FunctionValidator(function() {
         return in_array($this->type, self::$BARCODE_TYPES); 

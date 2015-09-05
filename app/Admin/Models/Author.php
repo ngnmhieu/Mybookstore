@@ -2,6 +2,7 @@
 namespace App\Admin\Models;
 
 use Markzero\Mvc\AppModel;
+use Markzero\Validation\ValidationManager;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Markzero\Validation\Validator\RequireValidator;
 use Markzero\Http\Exception\ResourceNotFoundException;
@@ -12,12 +13,9 @@ use Markzero\Http\Exception\ResourceNotFoundException;
  */
 class Author extends \App\Models\Author
 {
-
   protected function _validate() 
   {
-    $vm = self::createValidationManager(); 
-
-    $vm->validate(function($vm) {
+    ValidationManager::validate(function($vm) {
 
       $vm->register('name', new RequireValidator($this->name), 'Author name is required');
 
