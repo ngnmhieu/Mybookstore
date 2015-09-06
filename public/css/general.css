@@ -97,6 +97,38 @@ hr.underline {
   padding: 5px;
 }
 
+#Basket table .item-name {
+  font-size: 1.2em;
+  color: #333;
+  display: block;
+}
+
+#Basket table .item-amount,
+#Basket table .item-unit-price,
+#Basket table .item-total-price {
+  font-size: 1.2em;
+}
+
+#Basket table .item-remove {
+  display: block;
+}
+
+#BasketInfo {
+  margin-bottom: 20px;
+}
+#BasketInfo .info-label {
+  font-weight: bold;
+}
+#BasketInfo .info-total {
+  font-size: 1.4em;
+  font-weight: bold;
+}
+
+
+#BasketControl .btn {
+  margin-left: 5px; 
+}
+
 #PageFooter {
   height: 100px;
   margin-top: 70px;

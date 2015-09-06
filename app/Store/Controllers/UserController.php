@@ -1,8 +1,8 @@
 <?php
 namespace App\Store\Controllers;
 
-use App\Models\UserSession; 
-use App\Models\User; 
+use App\Store\Models\UserSession; 
+use App\Store\Models\User; 
 use App\Controllers\ApplicationController;
 use Markzero\Mvc\View;
 use Markzero\Mvc\AppController;

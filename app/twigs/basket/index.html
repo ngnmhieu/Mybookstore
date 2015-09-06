@@ -1,0 +1,96 @@
+{{ include('common/header.html') }}
+
+<main>
+  <section id="Basket">
+
+    <form action="{{ webpath('Store::BasketController', 'update') }}" method="post">
+
+      <h3>Your Shopping Basket</h3>
+
+      <br />
+
+      <table class="table">
+        <tr>
+          <th style="width: 10%"></th>
+          <th style="width: 50%"></th>
+          <th class="text-center">Quantity</th>
+          <th class="text-right">Unit Price</th>
+          <th class="text-right">Total Price</th>
+        </tr>
+
+        {% for item in basket.items %}
+        {% set product = item.product%}
+        <tr>
+          <td>
+            <a class="item-name" href="{{ webpath('Store::ProductController', 'show', [product.id]) }}">
+              <img src="{{ product.thumb.url }}" style="width: 100%" />
+            </a>
+          </td>
+          <td>
+            <b><a class="item-name" href="{{ webpath('Store::ProductController', 'show', [product.id]) }}">{{ product.name }}</a></b>
+
+            {% set author_names = product.getAuthorNames %}
+            {% if not author_names is empty %}
+            <span class="author-list">by {{ author_names | join(', ') }}</span>
+            <br />
+            {% endif %}
+
+            {% if product.ratings | length > 0 %}
+
+            {% set stars = get_stars(product.meanRating) %}
+
+            {% for star in stars%}
+            <span class="star {{ star.active ? 'active' : 'inactive' }}">{{ star.value | raw }}</span>
+            {% endfor %}
+
+            {% endif %}
+
+            <a class="item-remove" href="{{ webpath('Store::BasketController', 'removeItem', [item.id]) }}">remove</a>
+          </td>
+          <td class="item-amount text-center">
+            <select name="items[{{item.id}}]">
+              {% for i in 1..50 %}
+              <option value="{{ i }}" {{ i == item.amount ? 'selected' : '' }}>{{ i }}</option>
+              {% endfor  %}
+            </select>
+          </td>
+          <td class="item-unit-price text-right">{{ product.price | number_format(2,',','.') }} &euro;</td>
+          <td class="item-total-price text-right">{{ (item.amount * product.price) | number_format(2,',','.') }} &euro;</td>
+        </tr>
+
+        {% endfor %}
+
+      </table>
+
+      <section class="row" id="BasketInfo">
+        <div class="col-xs-4 col-xs-offset-8">
+          <div class="row">
+            <div class="col-xs-8 text-right info-label">Subtotal</div>
+            <div class="col-xs-4 text-right info-value">{{ basket.total | number_format(2,',','.') }} &euro;</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-8 text-right info-label">Shipping cost</div>
+            <div class="col-xs-4 text-right info-value">{{ 0 | number_format(2,',','.')  }} &euro;</div>
+          </div>
+          <div class="row">
+            <div class="col-xs-8 text-right info-label">incl. 19% VAT</div>
+            <div class="col-xs-4 text-right info-value">{{ 0 | number_format(2,',','.')  }} &euro;</div>
+          </div>
+          <br />
+          <div class="row">
+            <div class="col-xs-8 text-right info-label info-total">Total</div>
+            <div class="col-xs-4 text-right info-value info-total">{{ basket.total | number_format(2,',','.') }} &euro;</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="BasketControl">
+        <a href="{{ webpath('Store::BasketController', 'confirm') }}" class="btn btn-primary pull-right"><span class="fa fa-check"></span> Checkout</a>
+        <button type="submit" class="btn btn-default pull-right"><span class="fa fa-refresh"></span> Update Basket</button>
+      </section>
+
+    </form>
+  </section>
+  </main>
+
+  {{ include('common/footer.html') }}

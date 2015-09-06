@@ -39,10 +39,11 @@
               </div>
 
               <div class="buy">
-                <div class="btn-group">
-                  <button class="btn btn-success"><span class="fa fa-shopping-cart fa-lg"></span></button>
-                  <button class="btn btn-success" style="padding-left: 22px; padding-right: 22px">Add to Cart</button>
-                </div>
+                <form action="{{ webpath('Store::BasketController', 'addItem') }}" method="post" class="btn-group">
+                  <button type="submit" class="btn btn-success"><span class="fa fa-shopping-cart fa-lg"></span></button>
+                  <input type="hidden" name="product_id" value="{{ product.id }}" />
+                  <button type="submit" class="btn btn-success" style="padding-left: 22px; padding-right: 22px">Add to Cart</button>
+                </form>
               </div>
             </div>
 

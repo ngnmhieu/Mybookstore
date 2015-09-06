@@ -17,7 +17,7 @@ class Rating extends \App\Models\Rating
 
     $vm->register('value', new Validator\RequireValidator($this->value), 'Value of the rating is required');
     $vm->register('value', new Validator\FunctionValidator(function() {
-      return in_array((int) $this->value, Rating::$VALID_VALUES);
+      return in_array((int) $this->value, Rating::getScalar());
     }), 'Rating value is invalid');
 
     $vm->doValidate();
@@ -29,6 +29,7 @@ class Rating extends \App\Models\Rating
    * @throw Markzero\Http\Exception\DuplicateResourceException
    */
   public static function create($user, $product, $params) {
+
     if ($user === null) {
       throw new ResourceNotFoundException();
     } 
@@ -42,10 +43,12 @@ class Rating extends \App\Models\Rating
       throw new DuplicateResourceException();
     }
     
-    $rating = new static();
-    $rating->value = $params->get('rating[value]', null, true); 
-    $rating->user = $user;
-    $rating->product = $product;
+    $rating             = new static();
+    $rating->value      = $params->get('rating[value]', null, true);
+    $rating->user       = $user;
+    $rating->created_at = new \DateTime("now");
+    $rating->updated_at = new \DateTime("now");
+    $rating->product    = $product;
     
     $em = self::getEntityManager();
     $em->persist($rating);
@@ -65,7 +68,8 @@ class Rating extends \App\Models\Rating
       throw new ResourceNotFoundException();
     }
     
-    $rating->value = $params->get('rating[value]', null, true); 
+    $rating->value      = $params->get('rating[value]', null, true);
+    $rating->updated_at = new \DateTime("now");
     
     $em = self::getEntityManager();
     $em->persist($rating);

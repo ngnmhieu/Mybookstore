@@ -8,19 +8,24 @@ use Markzero\Mvc\AppModel;
  */
 abstract class OrderPosition extends AppModel
 {
-  protected static $readable   = ['id'];
-  protected static $accessible = ['amount', 'price', 'order', 'product'];
+  protected static $readable = ['id','amount', 'price', 'order', 'product'];
 
   /** @Id @Column(type="integer") @GeneratedValue **/
   protected $id;
 
+  /** @Column(type="float") **/
+  protected $price;
+
+  /** @Column(type="integer") **/
+  protected $amount;
+
   /**
-   * @ManyToOne(targetEntity="User", inversedBy="orderPositions")
+   * @ManyToOne(targetEntity="Product", inversedBy="orderPositions")
    */
   protected $product;
 
   /**
-   * @OneToMany(targetEntity="OrderPosition", mappedBy="order", cascade={"remove"})
+   * @ManyToOne(targetEntity="Order", inversedBy="positions")
    */
-  protected $positions;
+  protected $order;
 }

@@ -67,3 +67,11 @@ $r->post('/user/','App\Store\Controllers\UserController','create');
 $r->get('/session/sign_in','App\Auth\Controllers\SessionController','signIn');
 $r->get('/session/sign_out','App\Auth\Controllers\SessionController','delete');
 $r->post('/session/','App\Auth\Controllers\SessionController','create');
+
+/** Basket **/
+$r->get('/basket/', 'App\Store\Controllers\BasketController', 'index');
+$r->post('/basket/item/', 'App\Store\Controllers\BasketController', 'addItem');
+$r->get('/basket/remove_item/([0-9]+)', 'App\Store\Controllers\BasketController', 'removeItem');
+$r->post('/basket/update/', 'App\Store\Controllers\BasketController', 'update');
+$r->get('/basket/confirm/', 'App\Store\Controllers\BasketController', 'confirm');
+$r->post('/basket/buy/', 'App\Store\Controllers\BasketController', 'buy');

@@ -5,7 +5,6 @@ use App\Store\Models\Product;
 use App\Store\Models\Rating; 
 use App\Store\Models\UserSession; 
 use App\Store\Models\User;
-use App\Controllers\ApplicationController;
 use Markzero\Mvc\View\TwigView;
 use Markzero\Mvc\View\JsonView;
 use Markzero\Mvc\View\HtmlView;
@@ -15,22 +14,8 @@ use Markzero\Http\Exception\ResourceNotFoundException;
 use Markzero\Http\Exception\DuplicateResourceException;
 use Markzero\Validation\Exception\ValidationException;
 
-class ProductController extends ApplicationController 
+class ProductController extends StoreController 
 {
-
-  public function getUserReplacements()
-  {
-    $replacements = [];
-
-    $userSession = UserSession::getInstance();
-
-    $signedIn = $userSession->isSignedIn();
-
-    $replacements['user']         = $signedIn ?  $userSession->getUser() : new User();
-    $replacements['is_signed_in'] = $signedIn;
-
-    return $replacements;
-  }
 
   public function index() 
   {
@@ -43,9 +28,7 @@ class ProductController extends ApplicationController
         'latests'  => $latests
       ];
 
-      $user_replacements = $this->getUserReplacements();
-
-      $data = array_merge($user_replacements, $data);
+      $data = array_merge($this->getCommonData(), $data);
 
       $this->render(new TwigView('product/index.html', $data));
     });
@@ -87,9 +70,9 @@ class ProductController extends ApplicationController
         }
 
 
-        $data = array_merge($this->getUserReplacements(), $data);
+        $data = array_merge($this->getCommonData(), $data);
 
-        $this->render(new TwigView('product/show.html',$data));
+        $this->render(new TwigView('product/show.html', $data));
       });
 
     } catch(ResourceNotFoundException $e) {

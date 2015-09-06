@@ -296,7 +296,7 @@ class Product extends \App\Models\Product
     {
       if ($value != null) 
       {
-        $barcode = new Barcode($value, $type, $this);;
+        $barcode = new Barcode($value, $type, $this);
         $this->barcodes[] = $barcode; 
         $em->persist($barcode);
         $em->flush();
