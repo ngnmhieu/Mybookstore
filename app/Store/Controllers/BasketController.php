@@ -20,9 +20,19 @@ class BasketController extends StoreController
   {
     $this->respondTo('html', function() {
 
+      $basket = Basket::getInstance(UserSession::getInstance());
+
       $data = $this->getCommonData();
 
-      $this->render(new TwigView('basket/index.html', $data));
+      if ($basket->isEmpty()) {
+
+        $this->render(new TwigView('basket/empty.html', $data));
+
+      } else {
+
+        $this->render(new TwigView('basket/index.html', $data));
+      }
+
     });
   }
 
@@ -94,6 +104,13 @@ class BasketController extends StoreController
   {
     $this->respondTo('html', function() {
 
+      $basket = Basket::getInstance(UserSession::getInstance());
+
+      if ($basket->isEmpty()) {
+        $this->getResponse()->redirect('App\Store\Controllers\BasketController', 'index');
+        return;
+      }
+
       $data = $this->getCommonData();
 
       $this->render(new TwigView('basket/confirmation.html', $data));
@@ -111,6 +128,11 @@ class BasketController extends StoreController
           throw new ActionNotAuthorizedException();
 
         $basket = Basket::getInstance($userSession);
+
+        if ($basket->isEmpty()) {
+          $this->getResponse()->redirect('App\Store\Controllers\BasketController', 'index');
+          return;
+        }
 
         $order = Order::create($basket, $userSession->getUser());
 

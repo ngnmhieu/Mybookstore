@@ -9,6 +9,7 @@ class OrderPosition extends \App\Models\OrderPosition
 {
   protected function _validate()
   {
+
   }
 
   /**

@@ -134,6 +134,14 @@ class Basket extends AppModel
   }
 
   /**
+   * @return bool is basket empty
+   */
+  public function isEmpty()
+  {
+    return count($this->items) == 0;
+  }
+
+  /**
    * Empty the basket
    */
   public function clear()
