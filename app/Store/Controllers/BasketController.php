@@ -144,7 +144,7 @@ class BasketController extends StoreController
 
       } catch (ActionNotAuthorizedException $e) {
 
-        $this->getResponse()->redirect('App\Auth\Controllers\AuthController', 'signIn');
+        $this->getResponse()->redirect('App\Auth\Controllers\SessionController', 'signIn');
       }
     });
   }

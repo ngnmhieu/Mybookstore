@@ -21,7 +21,7 @@ class BasketItem extends AppModel
   protected $amount;
 
   /**
-   * @ManyToOne(targetEntity="Product")
+   * @OneToOne(targetEntity="Product")
    */
   protected $product;
 
